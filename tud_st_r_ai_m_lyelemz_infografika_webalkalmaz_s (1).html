@@ -1,0 +1,4240 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TudásTér AI — Mélyelemzés, Infografika & Hiteles Források</title>
+  <!-- Opcionális webfont (ha nem töltődik be, a rendszerbetűtípusok azonnal átveszik a helyét) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================================================
+       1. DESIGN TOKENS & BASE RESET (100% önálló, CDN-mentes CSS)
+       ========================================================================= */
+    :root {
+      --bg-base: #060913;
+      --bg-surface: #0d1323;
+      --bg-card: rgba(16, 23, 41, 0.82);
+      --bg-card-strong: rgba(13, 19, 35, 0.94);
+      --bg-input: #080d1a;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+
+      --accent-indigo: #6366f1;
+      --accent-indigo-soft: rgba(99, 102, 241, 0.16);
+      --accent-cyan: #06b6d4;
+      --accent-cyan-soft: rgba(6, 182, 212, 0.15);
+      --accent-emerald: #10b981;
+      --accent-emerald-soft: rgba(16, 185, 129, 0.15);
+      --accent-amber: #f59e0b;
+      --accent-amber-soft: rgba(245, 158, 11, 0.15);
+      --accent-rose: #f43f5e;
+      --accent-rose-soft: rgba(244, 63, 94, 0.15);
+      --accent-tiktok-pink: #ff0050;
+      --accent-tiktok-cyan: #00f2ea;
+      --accent-youtube: #ef4444;
+
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --radius-xl: 28px;
+      --shadow-card: 0 20px 50px -24px rgba(0, 0, 0, 0.85);
+      --shadow-glow: 0 12px 32px -12px rgba(99, 102, 241, 0.45);
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(ellipse 65% 45% at 12% -6%, rgba(99, 102, 241, 0.22), transparent 65%),
+        radial-gradient(ellipse 55% 40% at 88% 4%, rgba(6, 182, 212, 0.16), transparent 60%),
+        radial-gradient(ellipse 50% 45% at 50% 102%, rgba(16, 185, 129, 0.09), transparent 65%);
+      background-attachment: fixed;
+    }
+
+    h1, h2, h3, h4, .font-display {
+      font-family: var(--font-display);
+      letter-spacing: -0.02em;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Háttér finom rács */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-size: 38px 38px;
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.024) 1px, transparent 1px);
+    }
+
+    /* Görgetősáv */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+    /* Konténer */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Glassmorphism kártyák */
+    .glass-card {
+      background: linear-gradient(180deg, rgba(19, 27, 46, 0.82) 0%, rgba(10, 15, 28, 0.92) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+
+    .glass-hover {
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .glass-hover:hover {
+      transform: translateY(-2px);
+      border-color: rgba(99, 102, 241, 0.42);
+      box-shadow: 0 24px 48px -22px rgba(99, 102, 241, 0.28);
+    }
+
+    /* =========================================================================
+       2. FEJLÉC (HEADER)
+       ========================================================================= */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(6, 9, 19, 0.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .header-inner {
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-cyan), var(--accent-emerald));
+      padding: 1.5px;
+      flex-shrink: 0;
+      box-shadow: 0 8px 20px -6px rgba(6, 182, 212, 0.45);
+    }
+
+    .brand-icon-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 10.5px;
+      background: #070b16;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #22d3ee;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.12rem;
+      line-height: 1.1;
+      color: #ffffff;
+    }
+
+    .brand-title span {
+      background: linear-gradient(90deg, #818cf8, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-sub {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid var(--border-subtle);
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      min-height: 40px;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: var(--border-strong);
+      color: #ffffff;
+    }
+
+    .btn-cyan-soft {
+      background: var(--accent-cyan-soft);
+      border-color: rgba(6, 182, 212, 0.32);
+      color: #67e8f9;
+    }
+
+    .btn-cyan-soft:hover {
+      background: rgba(6, 182, 212, 0.24);
+      border-color: rgba(6, 182, 212, 0.5);
+      color: #cffafe;
+    }
+
+    .count-badge {
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.28);
+      color: #c7d2fe;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    /* =========================================================================
+       3. HERO & KERESŐ SZEKCIÓ
+       ========================================================================= */
+    .main-wrap {
+      padding-top: 40px;
+      padding-bottom: 90px;
+    }
+
+    .hero {
+      max-width: 880px;
+      margin: 0 auto 44px;
+      text-align: center;
+    }
+
+    .eyebrow-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--accent-indigo-soft);
+      border: 1px solid rgba(129, 140, 248, 0.3);
+      color: #c7d2fe;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulseRing 2s infinite;
+    }
+
+    @keyframes pulseRing {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.65); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .hero-title {
+      font-size: clamp(1.95rem, 4.5vw, 3.25rem);
+      font-weight: 800;
+      line-height: 1.12;
+      color: #ffffff;
+      margin-bottom: 16px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #818cf8 0%, #38bdf8 50%, #34d399 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(0.92rem, 1.8vw, 1.08rem);
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 28px;
+    }
+
+    /* Keresődoboz */
+    .search-panel {
+      padding: 16px;
+      border-radius: var(--radius-xl);
+      text-align: left;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .input-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      pointer-events: none;
+      display: flex;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 56px;
+      padding: 0 42px 0 46px;
+      border-radius: 16px;
+      background: var(--bg-input);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      font-size: 0.98rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-input::placeholder {
+      color: #64748b;
+    }
+
+    .search-input:focus {
+      border-color: rgba(99, 102, 241, 0.7);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.22);
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .clear-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 26px;
+      min-height: 56px;
+      border-radius: 16px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #ffffff;
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #06b6d4 100%);
+      box-shadow: var(--shadow-glow);
+      transition: transform 0.18s, filter 0.2s, opacity 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Beállítási sáv a kereső alatt */
+    .config-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .control-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .control-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .pill-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      padding: 4px;
+      border-radius: 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      gap: 4px;
+    }
+
+    .seg-btn {
+      padding: 6px 12px;
+      border-radius: 9px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      transition: all 0.18s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .seg-btn:hover {
+      color: #ffffff;
+    }
+
+    .seg-btn.active {
+      background: rgba(99, 102, 241, 0.25);
+      color: #e0e7ff;
+      border-color: rgba(129, 140, 248, 0.4);
+      font-weight: 600;
+    }
+
+    .seg-btn.active-cyan {
+      background: rgba(6, 182, 212, 0.22);
+      color: #cffafe;
+      border-color: rgba(34, 211, 238, 0.4);
+      font-weight: 600;
+    }
+
+    .pro-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: rgba(245, 158, 11, 0.2);
+      color: #fcd34d;
+    }
+
+    /* Gyorsindító chipek */
+    .chips-area {
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .demo-cta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #ecfeff;
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(99, 102, 241, 0.28));
+      border: 1px solid rgba(34, 211, 238, 0.45);
+      transition: transform 0.18s, background 0.2s, box-shadow 0.2s;
+    }
+
+    .demo-cta-chip:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px -8px rgba(6, 182, 212, 0.5);
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.35), rgba(99, 102, 241, 0.38));
+    }
+
+    .topic-chip {
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid var(--border-subtle);
+      transition: all 0.18s;
+    }
+
+    .topic-chip:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: rgba(129, 140, 248, 0.45);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* =========================================================================
+       4. TÖBBLÉPCSŐS LOADER & HIBADOBOZ
+       ========================================================================= */
+    .loader-card {
+      max-width: 820px;
+      margin: 24px auto 40px;
+      padding: 32px;
+      border-color: rgba(99, 102, 241, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loader-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .loader-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .spinner-ring {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      border: 3px solid rgba(99, 102, 241, 0.22);
+      border-top-color: #22d3ee;
+      animation: spin 0.9s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loader-kicker {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #22d3ee;
+      font-weight: 700;
+    }
+
+    .loader-heading {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 2px;
+    }
+
+    .loader-pct {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #818cf8, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: #060a14;
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #6366f1, #06b6d4, #10b981);
+      transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      width: 10%;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      opacity: 0.55;
+      transition: all 0.25s;
+    }
+
+    .step-item.active {
+      opacity: 1;
+      color: #ffffff;
+      background: rgba(99, 102, 241, 0.14);
+      border-color: rgba(129, 140, 248, 0.4);
+    }
+
+    .step-item.done {
+      opacity: 1;
+      color: #a7f3d0;
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.32);
+    }
+
+    .step-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #475569;
+      flex-shrink: 0;
+    }
+
+    .step-item.active .step-dot {
+      background: #22d3ee;
+      box-shadow: 0 0 10px #22d3ee;
+    }
+
+    .step-item.done .step-dot {
+      background: #10b981;
+    }
+
+    /* Hibadoboz */
+    .error-box {
+      max-width: 780px;
+      margin: 24px auto 40px;
+      padding: 24px;
+      border-color: rgba(244, 63, 94, 0.42);
+      background: linear-gradient(180deg, rgba(60, 14, 28, 0.55), rgba(16, 15, 26, 0.9));
+    }
+
+    .error-flex {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .error-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(244, 63, 94, 0.2);
+      color: #fda4af;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .error-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ffe4e6;
+      margin-bottom: 6px;
+    }
+
+    .error-detail {
+      font-size: 0.88rem;
+      color: #fecdd3;
+      margin-bottom: 16px;
+      word-break: break-word;
+    }
+
+    .error-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* =========================================================================
+       5. RIPORT DASHBOARD & RAGADÓS TARTALOMJEGYZÉK
+       ========================================================================= */
+    .report-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .sticky-nav {
+      position: sticky;
+      top: 76px;
+      z-index: 30;
+      padding: 10px 14px;
+      border-radius: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .toc-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      max-width: 100%;
+    }
+
+    .toc-links::-webkit-scrollbar { display: none; }
+
+    .toc-pill {
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      border: 1px solid transparent;
+      transition: all 0.18s;
+    }
+
+    .toc-pill:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .toc-pill.active {
+      background: rgba(99, 102, 241, 0.25);
+      color: #e0e7ff;
+      border-color: rgba(129, 140, 248, 0.4);
+    }
+
+    .report-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-sm {
+      padding: 7px 12px;
+      min-height: 34px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+    }
+
+    /* Szekció fejlécek */
+    .section-scroll {
+      scroll-margin-top: 145px;
+    }
+
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+
+    .kicker-line {
+      width: 18px;
+      height: 2px;
+      border-radius: 99px;
+      background: currentColor;
+    }
+
+    .section-title {
+      font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .section-sub {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Banner + Executive Summary */
+    .report-header-card {
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .report-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+
+    .badge-indigo { background: var(--accent-indigo-soft); color: #c7d2fe; border-color: rgba(129, 140, 248, 0.35); }
+    .badge-cyan { background: var(--accent-cyan-soft); color: #67e8f9; border-color: rgba(34, 211, 238, 0.35); }
+    .badge-emerald { background: var(--accent-emerald-soft); color: #6ee7b7; border-color: rgba(52, 211, 153, 0.35); }
+    .badge-amber { background: var(--accent-amber-soft); color: #fcd34d; border-color: rgba(251, 191, 36, 0.35); }
+    .badge-rose { background: var(--accent-rose-soft); color: #fda4af; border-color: rgba(251, 113, 133, 0.35); }
+    .badge-neutral { background: rgba(255, 255, 255, 0.06); color: var(--text-secondary); border-color: var(--border-subtle); }
+
+    .report-main-title {
+      font-size: clamp(1.55rem, 3.4vw, 2.35rem);
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.18;
+      margin-bottom: 8px;
+    }
+
+    .report-query-meta {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+    }
+
+    .exec-box {
+      padding: 20px 22px;
+      border-radius: var(--radius-md);
+      background: rgba(6, 10, 22, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .exec-paragraphs {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 0.96rem;
+      color: var(--text-secondary);
+      line-height: 1.72;
+    }
+
+    .exec-paragraphs strong, .chapter-body strong, .roadmap-desc strong, .fact-text strong {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* =========================================================================
+       6. INFOGRAFIKA SZEKCIÓ (3 SVG GAUGE + 4 BENTO + COMPARATIVE CHART)
+       ========================================================================= */
+    .gauges-card {
+      padding: 26px;
+    }
+
+    .gauges-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .gauge-box {
+      padding: 20px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(6, 10, 22, 0.62);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .gauge-svg-wrap {
+      position: relative;
+      width: 118px;
+      height: 118px;
+      margin-bottom: 12px;
+    }
+
+    .gauge-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .gauge-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.07);
+      stroke-width: 9;
+    }
+
+    .gauge-arc {
+      fill: none;
+      stroke-width: 9;
+      stroke-linecap: round;
+      stroke-dasharray: 289.03;
+      stroke-dashoffset: 289.03;
+      transition: stroke-dashoffset 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .gauge-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gauge-val {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .gauge-label {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .gauge-desc {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .verdict-note {
+      margin-top: 18px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: rgba(99, 102, 241, 0.09);
+      border: 1px solid rgba(129, 140, 248, 0.25);
+      font-size: 0.88rem;
+      color: #e0e7ff;
+    }
+
+    /* 4 Fő Mutató (Bento Stat Cards) */
+    .bento-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat-card {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .stat-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid transparent;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+
+    .stat-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.48;
+    }
+
+    /* Hatékonyság vs Bizonyíték diagram */
+    .chart-card {
+      padding: 26px;
+    }
+
+    .chart-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 18px;
+      padding-bottom: 16px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    .chart-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chart-row {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.024);
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chart-row:hover, .chart-row.selected {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(129, 140, 248, 0.45);
+    }
+
+    .chart-row-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .chart-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.94rem;
+      color: #ffffff;
+    }
+
+    .bar-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 7px;
+    }
+
+    .bar-caption {
+      width: 96px;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 10px;
+      border-radius: 999px;
+      background: #060a14;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .bar-eff { background: linear-gradient(90deg, #6366f1, #22d3ee); }
+    .bar-ev { background: linear-gradient(90deg, #10b981, #2dd4bf); }
+
+    .bar-num {
+      width: 38px;
+      text-align: right;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .inspector-box {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(30, 41, 82, 0.38);
+      border: 1px solid rgba(129, 140, 248, 0.35);
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .inspector-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(99, 102, 241, 0.22);
+      color: #a5b4fc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .inspector-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .inspector-text {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+    }
+
+    /* =========================================================================
+       7. RÉSZLETES FEJEZETEK (DEEP DIVE CHAPTERS)
+       ========================================================================= */
+    .chapters-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .chapters-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .chapter-card {
+      overflow: hidden;
+    }
+
+    .chapter-btn {
+      width: 100%;
+      padding: 22px 24px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      text-align: left;
+      transition: background 0.2s;
+    }
+
+    .chapter-btn:hover {
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .chapter-head-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .chapter-num {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      background: linear-gradient(180deg, #818cf8, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      flex-shrink: 0;
+    }
+
+    .chapter-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+
+    .chapter-sub {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .chapter-chevron {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.25s;
+    }
+
+    .chapter-chevron.open {
+      transform: rotate(180deg);
+    }
+
+    .chapter-body {
+      padding: 4px 24px 24px 66px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      font-size: 0.94rem;
+      color: var(--text-secondary);
+      line-height: 1.72;
+    }
+
+    .chapter-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .chapter-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+    }
+
+    .bullet-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22d3ee;
+      margin-top: 9px;
+      flex-shrink: 0;
+    }
+
+    .callout-box {
+      padding: 15px 18px;
+      border-radius: 14px;
+      border: 1px solid;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .callout-science { background: rgba(99, 102, 241, 0.1); border-color: rgba(129, 140, 248, 0.32); }
+    .callout-tip { background: rgba(16, 185, 129, 0.1); border-color: rgba(52, 211, 153, 0.32); }
+    .callout-warning { background: rgba(245, 158, 11, 0.1); border-color: rgba(251, 191, 36, 0.35); }
+
+    .callout-title {
+      font-family: var(--font-display);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .callout-text {
+      font-size: 0.86rem;
+      color: #f1f5f9;
+      line-height: 1.55;
+    }
+
+    /* =========================================================================
+       8. LÉPÉSRŐL LÉPÉSRE ÚTITERV (ROADMAP)
+       ========================================================================= */
+    .roadmap-card {
+      padding: 26px;
+    }
+
+    .roadmap-list {
+      margin-top: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .roadmap-item {
+      display: flex;
+      gap: 18px;
+    }
+
+    .roadmap-rail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .roadmap-num {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      padding: 1.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .roadmap-num-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 12.5px;
+      background: #070b16;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #67e8f9;
+    }
+
+    .roadmap-line {
+      width: 2px;
+      flex: 1;
+      background: linear-gradient(180deg, rgba(6, 182, 212, 0.5), rgba(99, 102, 241, 0.15));
+      margin-top: 8px;
+    }
+
+    .roadmap-body {
+      flex: 1;
+      padding: 18px 20px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .roadmap-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 8px 0 6px;
+    }
+
+    .roadmap-desc {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .action-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .action-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+    }
+
+    /* =========================================================================
+       9. TÉNY VS. MÍTOSZ
+       ========================================================================= */
+    .myth-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .myth-card {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .myth-part {
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(244, 63, 94, 0.08);
+      border: 1px solid rgba(244, 63, 94, 0.28);
+    }
+
+    .fact-part {
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.28);
+      flex: 1;
+    }
+
+    .mf-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .myth-text { font-size: 0.88rem; color: #ffe4e6; font-weight: 500; }
+    .fact-text { font-size: 0.88rem; color: #e2e8f0; }
+
+    /* =========================================================================
+       10. TIKTOK & YOUTUBE VIDEÓ HUB
+       ========================================================================= */
+    .videos-card {
+      padding: 26px;
+    }
+
+    .videos-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .video-card {
+      border-radius: 18px;
+      background: rgba(7, 11, 22, 0.9);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.22s, border-color 0.22s;
+    }
+
+    .video-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .video-banner {
+      display: block;
+      padding: 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      position: relative;
+    }
+
+    .banner-tiktok {
+      background: linear-gradient(135deg, rgba(255, 0, 80, 0.22), rgba(10, 14, 28, 0.92) 52%, rgba(0, 242, 234, 0.2));
+    }
+
+    .banner-youtube {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.24), rgba(10, 14, 28, 0.92) 60%, rgba(249, 115, 22, 0.16));
+    }
+
+    .video-banner-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .plat-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .plat-tiktok {
+      background: linear-gradient(90deg, rgba(255, 0, 80, 0.28), rgba(0, 242, 234, 0.24));
+      color: #ffffff;
+      border: 1px solid rgba(255, 0, 80, 0.4);
+    }
+
+    .plat-youtube {
+      background: rgba(239, 68, 68, 0.24);
+      color: #fecaca;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .video-play-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .play-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      flex-shrink: 0;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .video-card:hover .play-circle {
+      transform: scale(1.07);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .video-creator {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      display: block;
+    }
+
+    .video-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.94rem;
+      color: #ffffff;
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    .video-body {
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .video-desc {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .video-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .query-tag {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .video-footer {
+      padding: 0 18px 18px;
+    }
+
+    .video-cta {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid;
+      transition: filter 0.2s, transform 0.15s;
+    }
+
+    .video-cta:hover {
+      filter: brightness(1.15);
+    }
+
+    .cta-tiktok {
+      background: linear-gradient(90deg, rgba(255, 0, 80, 0.22), rgba(0, 242, 234, 0.2));
+      border-color: rgba(255, 0, 80, 0.38);
+      color: #ffffff;
+    }
+
+    .cta-youtube {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: rgba(239, 68, 68, 0.38);
+      color: #fee2e2;
+    }
+
+    /* =========================================================================
+       11. HITELES FORRÁSOK HUB
+       ========================================================================= */
+    .sources-card {
+      padding: 26px;
+    }
+
+    .sources-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .source-card {
+      padding: 18px 20px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+
+    .source-card:hover {
+      background: rgba(99, 102, 241, 0.08);
+      border-color: rgba(129, 140, 248, 0.42);
+      transform: translateY(-2px);
+    }
+
+    .source-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .source-title {
+      font-family: var(--font-display);
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.32;
+      margin-bottom: 4px;
+    }
+
+    .source-pub {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #67e8f9;
+      margin-bottom: 8px;
+    }
+
+    .source-summary {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .source-why {
+      font-size: 0.78rem;
+      color: #a7f3d0;
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .source-link-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+
+    /* =========================================================================
+       12. ELŐZMÉNYEK OLDALSÁV & BEÁLLÍTÁSOK MODÁL & TOAST
+       ========================================================================= */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(3, 6, 14, 0.76);
+      backdrop-filter: blur(6px);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .overlay-center {
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .drawer {
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      background: #0b1121;
+      border-left: 1px solid var(--border-strong);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: -20px 0 50px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 500px;
+      background: #0d1426;
+      border: 1px solid var(--border-strong);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.85);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 16px;
+    }
+
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-item {
+      padding: 13px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      transition: background 0.18s;
+    }
+
+    .history-item:hover {
+      background: rgba(99, 102, 241, 0.12);
+      border-color: rgba(129, 140, 248, 0.35);
+    }
+
+    .history-open {
+      flex: 1;
+      text-align: left;
+      min-width: 0;
+    }
+
+    .history-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-meta {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .icon-btn-sm {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      transition: background 0.18s, color 0.18s;
+      flex-shrink: 0;
+    }
+
+    .icon-btn-sm:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+    }
+
+    .icon-btn-del:hover {
+      background: rgba(244, 63, 94, 0.2);
+      color: #fda4af;
+    }
+
+    .settings-field {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-strong);
+      color: #ffffff;
+      font-size: 0.88rem;
+      outline: none;
+      margin: 10px 0 8px;
+    }
+
+    .settings-field:focus {
+      border-color: var(--accent-indigo);
+    }
+
+    .status-pill {
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      margin-top: 12px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      z-index: 80;
+      padding: 12px 18px;
+      border-radius: 14px;
+      background: #0f172a;
+      border: 1px solid rgba(34, 211, 238, 0.45);
+      color: #ffffff;
+      font-size: 0.84rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+      transform: translateY(100px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.28s ease, opacity 0.28s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 26px 20px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* =========================================================================
+       13. RESZPONZÍV TÖRÉSPONTOK (MOBIL & TABLET)
+       ========================================================================= */
+    @media (max-width: 1024px) {
+      .bento-4 { grid-template-columns: repeat(2, 1fr); }
+      .videos-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .search-row { flex-direction: column; }
+      .btn-primary { width: 100%; }
+      .gauges-grid { grid-template-columns: 1fr; }
+      .bento-4 { grid-template-columns: 1fr; }
+      .myth-grid { grid-template-columns: 1fr; }
+      .videos-grid { grid-template-columns: 1fr; }
+      .sources-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .chapter-body { padding: 12px 18px 20px; }
+      .chapter-btn { padding: 18px; }
+      .report-header-card, .gauges-card, .chart-card, .roadmap-card, .videos-card, .sources-card { padding: 20px; }
+      .hide-sm { display: none; }
+      .sticky-nav { top: 70px; }
+      .bar-caption { width: 78px; }
+    }
+
+    /* Nyomtatás / PDF export */
+    @media print {
+      body { background: #ffffff !important; color: #0f172a !important; }
+      .no-print { display: none !important; }
+      .glass-card, .video-card, .source-card, .gauge-box, .exec-box, .roadmap-body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+      }
+      .report-main-title, .section-title, .chapter-title, .chart-name, .source-title, .video-title, .gauge-val, .gauge-label, strong {
+        color: #0f172a !important;
+        -webkit-text-fill-color: #0f172a !important;
+      }
+      .exec-paragraphs, .chapter-body, .section-sub, .source-summary, .video-desc, .fact-text, .myth-text {
+        color: #334155 !important;
+      }
+      .chapter-body { display: flex !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Háttérrács -->
+  <div class="bg-grid no-print"></div>
+
+  <!-- ==================== FEJLÉC ==================== -->
+  <header class="site-header no-print">
+    <div class="container header-inner">
+      <button type="button" id="brandResetBtn" class="brand-btn" aria-label="TudásTér AI főoldal">
+        <div class="brand-icon">
+          <div class="brand-icon-inner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+          </div>
+        </div>
+        <div>
+          <div class="brand-title">TudásTér <span>AI</span></div>
+          <span class="brand-sub">Mélyelemzés • Infografika • Források</span>
+        </div>
+      </button>
+
+      <div class="header-actions">
+        <button type="button" id="headerDemoBtn" class="btn-ghost btn-cyan-soft hide-sm">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+          </svg>
+          <span>Minta riport</span>
+        </button>
+
+        <button type="button" id="openHistoryBtn" class="btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span class="hide-sm">Előzmények</span>
+          <span id="historyCountBadge" class="count-badge">0</span>
+        </button>
+
+        <button type="button" id="openSettingsBtn" class="btn-ghost" title="API Beállítások & Kapcsolat teszt">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== FŐ TARTALOM ==================== -->
+  <main class="container main-wrap">
+
+    <!-- 1. HERO & KERESŐ -->
+    <section id="heroSection" class="hero no-print">
+      <div class="eyebrow-pill">
+        <span class="pulse-dot"></span>
+        <span>Hiteles AI Kutatóplatform • Bármilyen téma, bármilyen nyelven</span>
+      </div>
+
+      <h1 class="hero-title">
+        Írj be bármilyen témát.<br />
+        Kapj <span class="gradient-text">hiteles mélyelemzést és infografikát</span>.
+      </h1>
+
+      <p class="hero-subtitle">
+        Legyen szó angol trendekről, bőrgyógyászatról, edzésről vagy tudományról — rendszerezett szakmai elemzést, vizuális diagramokat, tényellenőrzést, TikTok/YouTube videóajánlókat és megbízható forrásokat állítunk össze egy helyen.
+      </p>
+
+      <div class="glass-card search-panel">
+        <form id="researchForm" novalidate>
+          <div class="search-row">
+            <div class="input-wrap">
+              <span class="input-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </span>
+              <input
+                type="text"
+                id="topicInput"
+                class="search-input"
+                autocomplete="off"
+                placeholder="Pl.: eye area ascending, kreatin hatásai, dopamin detox, alvásoptimalizálás..."
+                aria-label="Kutatandó téma"
+              />
+              <button type="button" id="clearInputBtn" class="clear-btn hidden" title="Mező törlése">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+              </svg>
+              <span>Kutatás indítása</span>
+            </button>
+          </div>
+
+          <!-- Beállítások: Nyelv + Mélység -->
+          <div class="config-bar">
+            <div class="control-group">
+              <span class="control-label">Nyelv:</span>
+              <div class="pill-group" role="group" aria-label="Összefoglaló nyelve">
+                <button type="button" class="seg-btn lang-btn active" data-lang="hu">Magyar összefoglaló</button>
+                <button type="button" class="seg-btn lang-btn" data-lang="en">Angol összefoglaló</button>
+                <button type="button" class="seg-btn lang-btn" data-lang="auto">Beírt nyelvhez igazítva</button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <span class="control-label">Mélység:</span>
+              <div class="pill-group" role="group" aria-label="Elemzés mélysége">
+                <button type="button" class="seg-btn depth-btn active-cyan" data-depth="detailed">Részletes</button>
+                <button type="button" class="seg-btn depth-btn" data-depth="deep">
+                  <span>Extra mélyelemzés</span>
+                  <span class="pro-tag">PRO</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Gyorsindító javaslatok -->
+      <div class="chips-area">
+        <div class="chips-row">
+          <button type="button" id="instantDemoBtn" class="demo-cta-chip">
+            <span>✨ Minta megnyitása: eye area ascending (Azonnali)</span>
+          </button>
+        </div>
+
+        <div class="chips-row">
+          <span class="control-label">Élő AI kutatás indítása:</span>
+          <button type="button" class="topic-chip" data-topic="eye area ascending">eye area ascending</button>
+          <button type="button" class="topic-chip" data-topic="kreatin tudományos hatásai">kreatin tudományos hatásai</button>
+          <button type="button" class="topic-chip" data-topic="dopamin detox">dopamin detox</button>
+          <button type="button" class="topic-chip" data-topic="mewing tények és mítoszok">mewing tények és mítoszok</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. ANIMÁLT BETÖLTŐ -->
+    <section id="loaderSection" class="glass-card loader-card hidden no-print" aria-live="polite">
+      <div class="loader-top">
+        <div class="loader-left">
+          <div class="spinner-ring"></div>
+          <div>
+            <div class="loader-kicker">AI Mélyelemzés folyamatban</div>
+            <div id="loaderTopicTitle" class="loader-heading">Téma feldolgozása...</div>
+          </div>
+        </div>
+        <div id="loaderPercent" class="loader-pct">12%</div>
+      </div>
+
+      <div class="progress-track">
+        <div id="loaderBar" class="progress-fill"></div>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-item" data-step="0"><span class="step-dot"></span><span>Téma kontextusának és nyelvének elemzése...</span></div>
+        <div class="step-item" data-step="1"><span class="step-dot"></span><span>Tudományos bizonyítékok és mítoszok szűrése...</span></div>
+        <div class="step-item" data-step="2"><span class="step-dot"></span><span>Infografika-adatok és útiterv összeállítása...</span></div>
+        <div class="step-item" data-step="3"><span class="step-dot"></span><span>TikTok, YouTube és forráslinkek előkészítése...</span></div>
+      </div>
+    </section>
+
+    <!-- 3. HIBAKEZELŐ DOBOZ -->
+    <section id="errorSection" class="glass-card error-box hidden no-print" role="alert">
+      <div class="error-flex">
+        <div class="error-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
+          </svg>
+        </div>
+        <div style="flex:1; min-width:0;">
+          <h3 class="error-title">Nem sikerült legenerálni az élő AI választ</h3>
+          <p id="errorDetailText" class="error-detail"></p>
+          <div class="error-actions">
+            <button type="button" id="retryBtn" class="btn-ghost" style="background:rgba(244,63,94,0.22); border-color:rgba(251,113,133,0.45); color:#fff;">
+              ↻ Újrapróbálás
+            </button>
+            <button type="button" id="errorSettingsBtn" class="btn-ghost">
+              ⚙ API Beállítások
+            </button>
+            <button type="button" id="errorDemoBtn" class="btn-ghost btn-cyan-soft">
+              ✨ Azonnali minta betöltése
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. INTERAKTÍV RIPORT DASHBOARD -->
+    <div id="reportContainer" class="report-stack hidden">
+
+      <!-- Ragadós gyorsnavigáció + Műveletek -->
+      <nav class="glass-card sticky-nav no-print" aria-label="Riport tartalomjegyzék">
+        <div class="toc-links">
+          <a href="#sec-overview" class="toc-pill active">Áttekintés</a>
+          <a href="#sec-infographic" class="toc-pill">Infografika</a>
+          <a href="#sec-deepdive" class="toc-pill">Mélyelemzés</a>
+          <a href="#sec-roadmap" class="toc-pill">Útiterv</a>
+          <a href="#sec-myths" class="toc-pill">Tény vs. Mítosz</a>
+          <a href="#sec-videos" class="toc-pill">Videók</a>
+          <a href="#sec-sources" class="toc-pill">Források</a>
+        </div>
+
+        <div class="report-actions">
+          <button type="button" id="copyMarkdownBtn" class="btn-ghost btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            <span>Másolás (Markdown)</span>
+          </button>
+          <button type="button" id="printPdfBtn" class="btn-ghost btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 6 2 18 2 18 9" /><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="8" />
+            </svg>
+            <span>Nyomtatás / PDF</span>
+          </button>
+          <button type="button" id="newSearchBtn" class="btn-ghost btn-sm btn-cyan-soft">
+            <span>+ Új keresés</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- A. FEJLÉC BANNER & ÖSSZEFOGLALÓ -->
+      <section id="sec-overview" class="section-scroll glass-card report-header-card">
+        <div class="report-badges">
+          <span id="repCategory" class="badge badge-indigo">Kategória</span>
+          <span id="repReadTime" class="badge badge-neutral">8 perc olvasás</span>
+          <span id="repVerdict" class="badge badge-amber">Értékelés</span>
+          <span id="repSourceModeBadge" class="badge badge-emerald hidden">Azonnali Minta</span>
+        </div>
+
+        <h2 id="repTitle" class="report-main-title"></h2>
+        <p id="repOriginalQuery" class="report-query-meta"></p>
+
+        <div class="exec-box">
+          <div class="section-kicker" style="color:#22d3ee;">
+            <span class="kicker-line"></span>
+            <span>Vezetői összefoglaló &amp; Realitás-ellenőrzés</span>
+          </div>
+          <div id="repSummary" class="exec-paragraphs"></div>
+        </div>
+      </section>
+
+      <!-- B. VIZUÁLIS INFOGRAFIKA SZEKCIÓ -->
+      <section id="sec-infographic" class="section-scroll report-stack" style="gap: 20px;">
+        <!-- 1) Hitelességi Mérőóra (3 SVG körgyűrű) -->
+        <div class="glass-card gauges-card">
+          <div class="section-kicker" style="color:#34d399;">
+            <span class="kicker-line"></span>
+            <span>Hitelességi Mérőóra</span>
+          </div>
+          <h3 class="section-title">Tudomány vs. Közösségi Média Hype</h3>
+          <p class="section-sub">Hogyan viszonyulnak a téma állításai a szakirodalomhoz és az internetes trendekhez?</p>
+
+          <div class="gauges-grid">
+            <!-- Tudományos alap -->
+            <div class="gauge-box">
+              <div class="gauge-svg-wrap">
+                <svg class="gauge-svg" viewBox="0 0 110 110">
+                  <circle class="gauge-bg" cx="55" cy="55" r="46" />
+                  <circle id="gaugeSciArc" class="gauge-arc" cx="55" cy="55" r="46" stroke="#10b981" />
+                </svg>
+                <div class="gauge-center">
+                  <span id="gaugeSciVal" class="gauge-val">0%</span>
+                </div>
+              </div>
+              <div class="gauge-label">Tudományos alap</div>
+              <div class="gauge-desc">Klinikai és kutatási bizonyítékok erőssége</div>
+            </div>
+
+            <!-- Szakértői konszenzus -->
+            <div class="gauge-box">
+              <div class="gauge-svg-wrap">
+                <svg class="gauge-svg" viewBox="0 0 110 110">
+                  <circle class="gauge-bg" cx="55" cy="55" r="46" />
+                  <circle id="gaugeExpArc" class="gauge-arc" cx="55" cy="55" r="46" stroke="#06b6d4" />
+                </svg>
+                <div class="gauge-center">
+                  <span id="gaugeExpVal" class="gauge-val">0%</span>
+                </div>
+              </div>
+              <div class="gauge-label">Szakértői konszenzus</div>
+              <div class="gauge-desc">Szakorvosok, kutatók egyetértési aránya</div>
+            </div>
+
+            <!-- Közösségi média hype -->
+            <div class="gauge-box">
+              <div class="gauge-svg-wrap">
+                <svg class="gauge-svg" viewBox="0 0 110 110">
+                  <circle class="gauge-bg" cx="55" cy="55" r="46" />
+                  <circle id="gaugeHypeArc" class="gauge-arc" cx="55" cy="55" r="46" stroke="#f59e0b" />
+                </svg>
+                <div class="gauge-center">
+                  <span id="gaugeHypeVal" class="gauge-val">0%</span>
+                </div>
+              </div>
+              <div class="gauge-label">Közösségi média hype</div>
+              <div class="gauge-desc">Virális trendek és túlzások aránya online</div>
+            </div>
+          </div>
+
+          <div id="credibilityNote" class="verdict-note"></div>
+        </div>
+
+        <!-- 2) 4 Fő Mutató (Bento Stat Cards) -->
+        <div id="keyMetricsGrid" class="bento-4"></div>
+
+        <!-- 3) Hatékonyság vs. Bizonyíték Diagram -->
+        <div class="glass-card chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="section-kicker" style="color:#818cf8;">
+                <span class="kicker-line"></span>
+                <span>Interaktív Összehasonlító Infografika</span>
+              </div>
+              <h3 class="section-title">Hatékonyság vs. Tudományos Bizonyíték</h3>
+              <p class="section-sub">Kattints bármelyik módszerre vagy tényezőre a részletes szakmai indokláshoz.</p>
+            </div>
+
+            <div class="pill-group no-print">
+              <button type="button" class="seg-btn chart-sort-btn active" data-sort="effectiveness">Hatékonyság szerint</button>
+              <button type="button" class="seg-btn chart-sort-btn" data-sort="evidence">Bizonyíték szerint</button>
+            </div>
+          </div>
+
+          <div class="chart-legend">
+            <span class="legend-item"><span class="legend-swatch" style="background:linear-gradient(90deg,#6366f1,#22d3ee)"></span>Gyakorlati hatékonyság (%)</span>
+            <span class="legend-item"><span class="legend-swatch" style="background:linear-gradient(90deg,#10b981,#2dd4bf)"></span>Tudományos bizonyíték (%)</span>
+          </div>
+
+          <div id="impactChartList" class="chart-list"></div>
+
+          <div class="inspector-box">
+            <div class="inspector-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>
+            </div>
+            <div>
+              <div id="inspectorTitle" class="inspector-title"></div>
+              <div id="inspectorText" class="inspector-text"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- C. RÉSZLETES AI MÉLYELEMZÉS (FEJEZETEK) -->
+      <section id="sec-deepdive" class="section-scroll">
+        <div class="chapters-head">
+          <div>
+            <div class="section-kicker" style="color:#34d399;">
+              <span class="kicker-line"></span>
+              <span>Szakmai Mélyelemzés</span>
+            </div>
+            <h3 class="section-title">Részletes Fejezetek</h3>
+            <p class="section-sub">Alapos, közérthető magyarázatok a működési mechanizmustól a kockázatokig.</p>
+          </div>
+          <button type="button" id="toggleAllChaptersBtn" class="btn-ghost btn-sm no-print">
+            Összes nyitása / zárása
+          </button>
+        </div>
+
+        <div id="chaptersContainer" class="chapters-stack"></div>
+      </section>
+
+      <!-- D. LÉPÉSRŐL LÉPÉSRE ÚTITERV -->
+      <section id="sec-roadmap" class="section-scroll glass-card roadmap-card">
+        <div class="section-kicker" style="color:#22d3ee;">
+          <span class="kicker-line"></span>
+          <span>Gyakorlati Protokoll</span>
+        </div>
+        <h3 class="section-title">Lépésről Lépésre Útiterv</h3>
+        <p class="section-sub">Reális, biztonságos és fenntartható megvalósítási ütemterv.</p>
+
+        <div id="roadmapList" class="roadmap-list"></div>
+      </section>
+
+      <!-- E. TÉNY VS. MÍTOSZ -->
+      <section id="sec-myths" class="section-scroll">
+        <div class="section-kicker" style="color:#fb7185;">
+          <span class="kicker-line"></span>
+          <span>Kritikus Tényellenőrzés</span>
+        </div>
+        <h3 class="section-title">Tény vs. Mítosz</h3>
+        <p class="section-sub">A legelterjedtebb internetes tévhitek és a bizonyított valóság egymás mellett.</p>
+
+        <div id="mythGrid" class="myth-grid"></div>
+      </section>
+
+      <!-- F. TIKTOK & YOUTUBE VIDEÓ HUB -->
+      <section id="sec-videos" class="section-scroll glass-card videos-card">
+        <div class="videos-head">
+          <div>
+            <div class="section-kicker" style="color:#f472b6;">
+              <span class="kicker-line"></span>
+              <span>Vizuális Videó Hub</span>
+            </div>
+            <h3 class="section-title">Ajánlott TikTok &amp; YouTube Videók</h3>
+            <p class="section-sub">Minden kártya pontos, működő keresési linket nyit meg releváns szakértői és gyakorlati videókhoz.</p>
+          </div>
+
+          <div class="pill-group no-print">
+            <button type="button" class="seg-btn video-filter-btn active" data-platform="all">Összes</button>
+            <button type="button" class="seg-btn video-filter-btn" data-platform="tiktok">TikTok</button>
+            <button type="button" class="seg-btn video-filter-btn" data-platform="youtube">YouTube</button>
+          </div>
+        </div>
+
+        <div id="videosGrid" class="videos-grid"></div>
+      </section>
+
+      <!-- G. HITELES FORRÁSOK & KUTATÁSI LINKEK -->
+      <section id="sec-sources" class="section-scroll glass-card sources-card">
+        <div class="section-kicker" style="color:#fbbf24;">
+          <span class="kicker-line"></span>
+          <span>Ellenőrizhető Szakirodalom</span>
+        </div>
+        <h3 class="section-title">Hiteles Források &amp; Kutatási Linkek</h3>
+        <p class="section-sub">PubMed, Google Scholar, orvosi/szakmai portálok és közösségi elemzések közvetlen keresési linkekkel.</p>
+
+        <div id="sourcesGrid" class="sources-grid"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==================== ELŐZMÉNYEK OLDALSÁV ==================== -->
+  <div id="historyOverlay" class="overlay hidden no-print" role="dialog" aria-modal="true" aria-label="Kutatási előzmények">
+    <aside class="drawer">
+      <div class="panel-header">
+        <div>
+          <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">Korábbi kutatások</h3>
+          <p style="font-size:0.76rem; color:var(--text-muted);">1 kattintással visszatölthető riportok</p>
+        </div>
+        <button type="button" id="closeHistoryBtn" class="icon-btn-sm" aria-label="Bezárás">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div id="historyList" class="history-list"></div>
+
+      <div style="padding-top:14px; border-top:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between; gap:8px;">
+        <button type="button" id="clearHistoryBtn" class="btn-ghost btn-sm" style="color:#fda4af; border-color:rgba(244,63,94,0.3); background:rgba(244,63,94,0.1);">
+          Összes törlése
+        </button>
+        <span style="font-size:0.72rem; color:var(--text-dim);">Max. 15 mentett riport</span>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ==================== BEÁLLÍTÁSOK MODÁL ==================== -->
+  <div id="settingsOverlay" class="overlay overlay-center hidden no-print" role="dialog" aria-modal="true" aria-label="API Beállítások">
+    <div class="modal-box">
+      <div class="panel-header">
+        <div>
+          <h3 style="font-size:1.1rem; font-weight:800; color:#fff;">API Beállítások &amp; Állapot</h3>
+          <p style="font-size:0.76rem; color:var(--text-muted);">Automatikus előnézeti mód vagy saját Gemini API kulcs</p>
+        </div>
+        <button type="button" id="closeSettingsBtn" class="icon-btn-sm" aria-label="Bezárás">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <p style="font-size:0.84rem; color:var(--text-secondary); line-height:1.55;">
+        Az előnézeti környezetben az alkalmazás <strong>API kulcs megadása nélkül, automatikusan működik</strong>. Ha letöltöd a HTML fájlt és saját gépen futtatod, itt megadhatsz egy saját Google AI Studio Gemini API kulcsot:
+      </p>
+
+      <input
+        type="password"
+        id="customApiKeyInput"
+        class="settings-field"
+        placeholder="Opcionális saját Gemini API kulcs (üresen hagyva: automatikus)"
+        autocomplete="off"
+      />
+
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+        <button type="button" id="saveApiKeyBtn" class="btn-ghost btn-cyan-soft">Mentés</button>
+        <button type="button" id="clearApiKeyBtn" class="btn-ghost">Kulcs törlése (Automatikus)</button>
+        <button type="button" id="testApiBtn" class="btn-ghost" style="margin-left:auto;">⚡ Kapcsolat tesztelése</button>
+      </div>
+
+      <div id="apiTestStatus" class="status-pill hidden"></div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST ÉRTESÍTÉS ==================== -->
+  <div id="toastEl" class="toast no-print" role="status" aria-live="polite">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+    <span id="toastMsg">Kész!</span>
+  </div>
+
+  <!-- LÁBLÉC -->
+  <footer class="site-footer no-print">
+    <div class="container">
+      TudásTér AI — Hiteles, forrásalapú AI kutató- és infografika-alkalmazás. Egészségügyi és esztétikai témákban a tartalom tájékoztató jellegű, nem helyettesíti szakorvos véleményét.
+    </div>
+  </footer>
+
+  <!-- ==================== ALKALMAZÁS LOGIKA (VANILLA JS) ==================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      // =======================================================================
+      // 1. BIZTONSÁGOS TÁROLÁS (try/catch localStorage + memória fallback)
+      // =======================================================================
+      const memoryStorage = {};
+      const SafeStore = {
+        get(key, fallbackVal) {
+          try {
+            const raw = window.localStorage.getItem(key);
+            if (raw !== null) return JSON.parse(raw);
+          } catch (_e) {
+            if (Object.prototype.hasOwnProperty.call(memoryStorage, key)) {
+              return memoryStorage[key];
+            }
+          }
+          return fallbackVal;
+        },
+        set(key, value) {
+          memoryStorage[key] = value;
+          try {
+            window.localStorage.setItem(key, JSON.stringify(value));
+          } catch (_e) {
+            // Szigorú sandbox iframe esetén a memória fallback gondoskodik a működésről
+          }
+        },
+        remove(key) {
+          delete memoryStorage[key];
+          try {
+            window.localStorage.removeItem(key);
+          } catch (_e) {}
+        }
+      };
+
+      // =======================================================================
+      // 2. ALKALMAZÁS ÁLLAPOT & KONFIGURÁCIÓ
+      // =======================================================================
+      const HISTORY_KEY = 'tudaster_history_v2';
+      const APIKEY_STORE = 'tudaster_custom_apikey_v2';
+      const apiKey = ''; // A futtató környezet automatikusan biztosítja, ha üres
+
+      // Automatikus modell-lánc: először Canvas/újabb modellek, majd stabil fallbackek
+      const MODEL_CANDIDATES = [
+        { model: 'gemini-2.5-flash-preview-09-2025', jsonMode: true },
+        { model: 'gemini-3-flash-preview', jsonMode: true },
+        { model: 'gemini-2.5-flash', jsonMode: true },
+        { model: 'gemini-3-flash-preview', jsonMode: false },
+        { model: 'gemini-2.5-flash', jsonMode: false }
+      ];
+
+      const state = {
+        outputLang: 'hu',       // 'hu' | 'en' | 'auto'
+        depth: 'detailed',      // 'detailed' | 'deep'
+        currentReport: null,
+        chartSort: 'effectiveness',
+        videoFilter: 'all',
+        chaptersOpen: true,
+        isLoading: false,
+        lastTopic: '',
+        history: []
+      };
+
+      // =======================================================================
+      // 3. AZONNALI, GAZDAG MINTA RIPORT ("eye area ascending")
+      // =======================================================================
+      const SAMPLE_REPORT = {
+        topicTitle: 'Eye Area Ascending — A szemkörnyék esztétikai optimalizálása',
+        originalQuery: 'eye area ascending',
+        category: 'Esztétika & Bőrgyógyászat',
+        readingTimeMinutes: 8,
+        verdictBadge: 'Vegyes tudományos háttér / Nagy közösségi média hype',
+        isSample: true,
+        credibility: {
+          scientificBase: 72,
+          expertConsensus: 68,
+          socialMediaHype: 90,
+          note: 'Az „eye area ascending” kifejezés TikTok- és online önfejlesztő közösségekből ered, ezért sok a túlzó vagy veszélyes trend (pl. csontütögetés, hunyorgás). Ugyanakkor a valóban működő elemei — bőrgyógyászati fényvédelem, retinoidok, allergia- és alváskezelés, ízléses szemöldökformázás — szilárd tudományos alapokon állnak.'
+        },
+        executiveSummary: [
+          'Az **„eye area ascending”** az internetes esztétikai kultúrában a szemkörnyék (szemhéj, szem alatti bőr, sötét karikák, puffadás, szemöldök és szempillák) tudatos, látványos javítását jelenti. Mivel az emberi tekintet az arc legfontosabb fókuszpontja, már apró bőrminőségi vagy keretezési javulások is feltűnően frissebb, kipihentebb és karakteresebb összhatást adnak.',
+          'A legfontosabb különbségtétel a **bizonyított bőrgyógyászati és életmódbeli lépések** (napi SPF 50, célzott szemkörnyéki retinoidok/koffein, sóbevitel és allergia kezelése, természetes szemöldök-optimalizálás) és a **káros internetes mítoszok** (pl. „bonesmashing” vagy folyamatos hunyorgás) között van. A csontozat ~65–70%-ban genetikai, de a maradék 30–35% (bőrtónus, ödéma, szemöldök-szempilla kontraszt) látványosan és biztonságosan fejleszthető.'
+        ],
+        keyMetrics: [
+          {
+            label: 'Látható javulás ideje',
+            value: '6–12 hét',
+            subtext: 'A duzzanat csökkenése 1–3 napon belül látszik, a bőrtextúra és pigmentáció javulása 2–3 hónap következetes rutint igényel.',
+            accent: 'cyan',
+            icon: 'clock'
+          },
+          {
+            label: 'Genetika vs. Rutin',
+            value: '70% / 30%',
+            subtext: 'A csontos szemüreg adottság, de a bőrminőség, az erek áttűnése és a szemöldökkeret drámaian befolyásolja az összképet.',
+            accent: 'indigo',
+            icon: 'dna'
+          },
+          {
+            label: 'Legjobb ár-érték arány',
+            value: 'SPF + Szemöldök',
+            subtext: 'A napi UV-védelem és az archoz illő, dús szemöldökforma adja a leggyorsabb, kockázatmentes optikai ugrást.',
+            accent: 'emerald',
+            icon: 'sparkles'
+          },
+          {
+            label: 'Fő rejtett kockázat',
+            value: 'Prosztaglandinok',
+            subtext: 'Egyes erős szempillaszérumok (pl. bimatoprost) elvékonyíthatják a szem körüli zsírpárnát, beesettebb tekintetet okozva.',
+            accent: 'amber',
+            icon: 'shield'
+          }
+        ],
+        impactFactors: [
+          {
+            name: 'Retinoidok (alacsony dózis) & Napi SPF 50',
+            effectiveness: 88,
+            evidence: 96,
+            riskLevel: 'Biztonságos',
+            detail: 'A szemkörnyéki bőr 4× vékonyabb az arc többi részénél. A napi fényvédelem megállítja a kollagén lebomlását, a szemkörnyékre formulázott gyengéd retinol/retinal pedig klinikailag igazoltan vastagítja a dermiszt és finomítja a ráncokat.'
+          },
+          {
+            name: 'Alvás, sóbevitel & Allergiák kezelése',
+            effectiveness: 82,
+            evidence: 93,
+            riskLevel: 'Biztonságos',
+            detail: 'A reggeli táskák és a lilás-kékes „allergic shiners” karikák egyik leggyakoribb oka a krónikus orrdugulás, az esti sós étkezés és a kevés mélyalvás. Ezek rendezése látványosan csökkenti a vénás pangást.'
+          },
+          {
+            name: 'Szemöldök & szempilla természetes keretezése',
+            effectiveness: 85,
+            evidence: 80,
+            riskLevel: 'Biztonságos',
+            detail: 'A hormonmentes peptid-szérumok, a helyes szemöldökformázás (túlszedés elkerülése) és a megfelelő szimmetria azonnal rendezettebb, határozottabb tekintetet eredményez.'
+          },
+          {
+            name: '5% Koffeines szérum & kíméletes hidegterápia',
+            effectiveness: 66,
+            evidence: 78,
+            riskLevel: 'Biztonságos',
+            detail: 'A helyi koffein érszűkítő (vazokonstriktor) hatású: gyorsan csökkenti a reggeli puffadást és a fáradt benyomást, de a hatása átmeneti (néhány órás), csontos árnyékokat nem tüntet el.'
+          },
+          {
+            name: 'Prosztaglandin szempillaszérumok / Házilagos Minoxidil',
+            effectiveness: 74,
+            evidence: 70,
+            riskLevel: 'Mérsékelt',
+            detail: 'Valóban gyorsan növesztik a szálakat, de a prosztaglandin-analógok periorbitális zsírszövet-sorvadást (PAP) és szemhéj-elszíneződést, a szembe kerülő minoxidil pedig erős irritációt okozhat.'
+          },
+          {
+            name: '„Bonesmashing” & folyamatos hunyorgás (Squintmaxxing)',
+            effectiveness: 6,
+            evidence: 4,
+            riskLevel: 'Veszélyes',
+            detail: 'Tudományosan teljesen alaptalan trendek. Az arccsont ütögetése maradandó ideg- és szövetkárosodást, a kényszeres hunyorgás pedig korai mély szarkalábakat és szemfáradtságot okoz.'
+          }
+        ],
+        deepDiveChapters: [
+          {
+            number: '01',
+            title: 'Mi pontosan az „Eye Area Ascending” és miért ez az arc központja?',
+            subtitle: 'A kifejezés eredete és a vizuális pszichológiai háttér',
+            paragraphs: [
+              'Az **eye area ascending** az internetes önfejlesztő és esztétikai fórumokról (TikTok, Reddit, YouTube) indult fogalom, amely minden olyan módszert összefoglal, amellyel a szemkörnyék kipihentebbnek, szimmetrikusabbnak és esztétikusabbnak látszik. Szemkövetéses (eye-tracking) pszichológiai kutatások igazolják, hogy egy idegen arcra pillantva a figyelmünk első másodpercének több mint 60%-át a szemekre és a szemöldökre fordítjuk.',
+              'Mivel a téma a közösségi médiában extrém népszerű lett, a hasznos bőrgyógyászati tanácsok keveredtek a szubkultúrák (pl. looksmaxxing) túlzó elméleteivel. A hiteles megközelítés célja, hogy kiszűrjük a valódi, kockázatmentes módszereket, és ne essünk áldozatul káros vagy drága, hatástalan trükköknek.'
+            ],
+            highlights: [
+              'A szemkörnyék négy pillére: bőrminőség, nyirok/ödéma egyensúly, szemöldök-szempilla kontraszt és csontos szerkezet.',
+              'Az első három pillér 100%-ban befolyásolható rutinnal és életmóddal.'
+            ],
+            callout: {
+              type: 'science',
+              title: 'Kulcs tanulság',
+              text: 'A „fáradt” tekintet az esetek többségében nem rossz genetika, hanem krónikus mikro-gyulladás, alváshiány, UV-károsodás és elhanyagolt szemöldök-keret eredménye.'
+            }
+          },
+          {
+            number: '02',
+            title: 'Tudományos és biológiai alapok: A sötét karikák 3 eltérő típusa',
+            subtitle: 'Miért nem működik ugyanaz a szemkrém két különböző embernél?',
+            paragraphs: [
+              'A periorbitális bőr mindössze **0,5 mm vastag** (az arc többi részén kb. 2 mm), szinte alig tartalmaz faggyúmirigyet, és napi **10–15 ezer pislogás** terheli. Ezért látszik meg rajta azonnal a dehidratáció, a kevés alvás és a napsugárzás.',
+              'A bőrgyógyászat három fő karikatípust különít el: 1) **Vaszkuláris (kékes-lilás)** — a vékony bőrön átlátszanak a kitágult erek, amit allergia és kialvatlanság ront; 2) **Pigmentált (barnás)** — felesleges melanin, amit napfény vagy szemdörzsölés okoz; 3) **Strukturális (árnyék)** — a mély könnyárok (tear trough) miatt vet árnyékot a fenti fény.'
+            ],
+            highlights: [
+              'Gyors tükörteszt: Ha enyhén felnézel erős fenti fényben és a karika eltűnik, akkor strukturális árnyékról van szó.',
+              'Ha a bőrt oldalra húzva a sötét szín ugyanott marad, akkor pigmentáció; ha lilábbá válik, akkor éreredetű.'
+            ],
+            callout: {
+              type: 'tip',
+              title: 'Kulcs tanulság',
+              text: 'Pigmentált karikára C-vitamin, niacinamid és SPF 50 kell; éreredetűre koffein, allergiakezelés és retinoid; mély árnyékra pedig főként jó hidratálás és szükség esetén szakorvosi konzultáció.'
+            }
+          },
+          {
+            number: '03',
+            title: 'Mi működik valóban? Bizonyított gyakorlati módszerek',
+            subtitle: 'Bőrápolás, életmód és optikai grooming összehangolása',
+            paragraphs: [
+              'A legmagasabb tudományos alátámasztottsággal a **fényvédelem (SPF 50 + UV400 napszemüveg)** és a **gyengéd retinoidok** (0,01–0,05% szemkörnyéki retinol vagy retinal) rendelkeznek. A napszemüveg kettős védelmet ad: blokkolja a kollagénbontó UVA-sugarakat és megakadályozza a reflexszerű hunyorgást.',
+              'A szemkörnyék megjelenését drámaian javítja a **tiszta szemfehérje (sclera)** és a rendezett szemöldök is. A sok képernyőidő csökkenti a pislogásszámot, ami enyhe vörösséget okoz — tartósítószer-mentes műkönny és a 20-20-20 szabály látványosan tisztább tekintetet ad. Szempillákra és szemöldökre a hormonmentes **peptid-szérumok** (pl. Biotinoyl Tripeptide-1) a legbiztonságosabbak.'
+            ],
+            highlights: [
+              'Reggel: 5% koffeines szérum + könnyű hidratáló + nem csípő fényvédő.',
+              'Este: Dörzsölésmentes arctisztítás + ceramidos krém + heti 2–3× szemkörnyéki retinoid.'
+            ],
+            callout: {
+              type: 'science',
+              title: 'Kulcs tanulság',
+              text: 'A kevesebb több: 3–4 jól megválasztott, illatmentes termék sokkal jobb eredményt ad, mint 10 réteg egymásra kent kozmetikum, amely csak miliumokat (apró fehér grízeket) okoz.'
+            }
+          },
+          {
+            number: '04',
+            title: 'Kockázatok, mellékhatások és veszélyes internetes buktatók',
+            subtitle: 'Mit kerülj el mindenképpen a szemed egészsége érdekében?',
+            paragraphs: [
+              'A közösségi médiában több olyan trend terjed, amely kifejezetten ártalmas. A **prosztaglandin-analógokat** (INCI-ben „prost” végződésű anyagok, pl. isopropyl cloprostenate) tartalmazó szempillaszérumok valóban hosszabb pillákat adnak, de egyeseknél visszafordíthatatlanul sorvasztják a szem körüli zsírszövetet (**PAP szindróma**), amitől a szem beesettebbnek és idősebbnek tűnik.',
+              'Hasonlóan kerülendő a csupasz jégkocka közvetlen bőrre szorítása (hajszálértágulatot és fagyási irritációt okoz — mindig kendőbe tekerve, rövid ideig használd), az erős hámlasztó savak szemhéjra kenése, valamint a **bonesmashing** és a **szemizom-erőltető hunyorgás**, amelyek sérüléshez és korai ráncokhoz vezetnek.'
+            ],
+            highlights: [
+              'Soha ne dörzsöld erősen a szemed — a mechanikai dörzsölés azonnali gyulladásos sötétedést és bőrnyúlást okoz.',
+              'A szem alatti hialuronsavas töltés (tear trough filler) nagy szakértelmet igényel, mert könnyen elvándorolhat vagy kékes elszíneződést (Tyndall-effektus) hagyhat.'
+            ],
+            callout: {
+              type: 'warning',
+              title: 'Fontos figyelmeztetés',
+              text: 'Ha egy termék csíp, könnyezést vagy tartós pirosságot okoz a szemkörnyéken, azonnal hagyd abba! A szaruhártya és a szemhéj vékony bőre rendkívül sérülékeny.'
+            }
+          }
+        ],
+        roadmap: [
+          {
+            stepNumber: 1,
+            phase: '1–2. hét • Alapok & Diagnózis',
+            title: 'Ödéma, alvás és allergia rendezése',
+            description: 'Mielőtt aktív hatóanyagokat vennél, szüntesd meg a leggyakoribb életmódbeli kiváltó okokat, és figyeld meg, mennyit javul a tekinteted önmagában ettől.',
+            actions: [
+              'Állíts be napi 7,5–8,5 óra rendszeres alvást, és kerüld a nagyon sós vacsorákat lefekvés előtt 3 órával.',
+              'Ha gyakran viszket a szemed vagy dugul az orrod, vizsgáltasd ki az allergiát — szüntesd meg a szemdörzsölést!',
+              'Vezess be napi SPF 50 fényvédőt és UV400 napszemüveget.'
+            ]
+          },
+          {
+            stepNumber: 2,
+            phase: '3–12. hét • Célzott Rutin & Keretezés',
+            title: 'Bőrvastagító hatóanyagok és szemöldök-optimalizálás',
+            description: 'Most jöhet a tudományosan igazolt, irritációmentes bőrápolás és a tekintet keretének finomhangolása.',
+            actions: [
+              'Reggel: 5% koffeines szérum + hidratáló; Este: heti 2–3× gyengéd szemkörnyéki retinoid vagy peptid szérum.',
+              'Szemöldök formázás: csak a kóbor szálak igazítása alul és középen, a természetes ív és dús megjelenés megőrzésével.',
+              'Szempilla- és szemöldökápolás kizárólag prosztaglandin-mentes peptid szérummal.'
+            ]
+          },
+          {
+            stepNumber: 3,
+            phase: '3. hónaptól • Kiértékelés & Fenntartás',
+            title: 'Fotós összehasonlítás és szakorvosi opciók mérlegelése',
+            description: 'Azonos nappali fényben hasonlítsd össze a kiinduló és a 90 napos állapotot. Ekkor dől el, mi maradt valóban genetikai tényező.',
+            actions: [
+              'Tartsd fenn a bevált, minimalista napi rutint — a következetesség sokkal fontosabb a drága termékeknél.',
+              'Makacs pigmentáció vagy mély könnyárok esetén konzultálj bőrgyógyásszal (pl. polinukleotidok, gyengéd lézer).'
+            ]
+          }
+        ],
+        factVsMyth: [
+          {
+            myth: '„A napi hunyorgás (squintmaxxing) véglegesen átalakítja a szemformát és a szemüreget.”',
+            fact: 'Felnőttkorban a csontozat nem formálható hunyorgással. A folyamatos izomfeszítés viszont gyorsan elmélyíti a szarkalábakat és fejfájást/szemfáradtságot okoz.',
+            badge: 'Tévhit'
+          },
+          {
+            myth: '„Egy drága szemkrém teljesen eltünteti a mély, genetikai karikákat.”',
+            fact: 'A jó szemkrémek javítják a hidratáltságot, a finom ráncokat és a barnás pigmentációt, de a mély csontos árnyékot semmilyen krém nem tudja fizikailag „feltölteni”.',
+            badge: 'Féligazság'
+          },
+          {
+            myth: '„Minden népszerű szempillanövesztő szérum teljesen ártalmatlan.”',
+            fact: 'A prosztaglandin-analógokat tartalmazó szérumok sokaknál a szem körüli zsírpárna elvékonyodását és sötétebb szemhéjat okozhatnak — mindig ellenőrizd az összetevőket!',
+            badge: 'Veszélyes tévhit'
+          },
+          {
+            myth: '„A reggeli jégkockázás véglegesen megemeli és feszesíti a szemhéjat.”',
+            fact: 'A hideg hatékonyan csökkenti a reggeli ödémát néhány órára, de nem ad tartós feszesítést; közvetlen jég pedig irritálhatja a hajszálereket (mindig kendőn át használd).',
+            badge: 'Túlzó trend'
+          }
+        ],
+        videos: [
+          {
+            platform: 'tiktok',
+            title: 'Bőrgyógyász tényellenőrzi az „Eye Area Ascending” trendeket',
+            creatorStyle: 'Bőrgyógyász (Dermatologist) • 60 mp',
+            description: 'Szakorvosok rövid, közérthető videókban mutatják meg, mely TikTok-tippek működnek valóban (koffein, SPF, retinoid) és melyek teljesen károsak.',
+            searchQuery: 'dermatologist eye area ascending skincare tips dark circles',
+            tags: ['bőrgyógyász', 'tényellenőrzés', 'szemkörnyék']
+          },
+          {
+            platform: 'tiktok',
+            title: '30 másodperces tükörteszt: Milyen típusú karikád van?',
+            creatorStyle: 'Vizuális öndiagnózis • 45 mp',
+            description: 'Látványos gyakorlati teszt a pigmentált, éreredetű és árnyékos karikák megkülönböztetéséhez, hogy ne dobj ki pénzt rossz krémre.',
+            searchQuery: 'how to tell type of dark circles pinch test dermatologist',
+            tags: ['sötét karikák', 'öndiagnózis', 'hatóanyagok']
+          },
+          {
+            platform: 'tiktok',
+            title: 'Szemöldök-keretezés és természetes dúsítás útmutató',
+            creatorStyle: 'Grooming & Arcarányok • 60 mp',
+            description: 'Gyakorlati bemutató az archoz illő szemöldökarányokról, a túlszedés elkerüléséről és a peptid-szérumos ápolásról.',
+            searchQuery: 'eyebrow grooming proportion guide natural eye area enhancement',
+            tags: ['szemöldök', 'grooming', 'optika']
+          },
+          {
+            platform: 'youtube',
+            title: 'Dermatologist Explains: How to Actually Fix Dark Circles & Puffy Eyes',
+            creatorStyle: 'Szakorvosi mélyelemzés • 12–16 perc',
+            description: 'Klinikai kutatásokkal alátámasztott, részletes előadás a szemkörnyék anatómiájáról, a biztonságos retinoid-felvitelről és az allergiás karikákról.',
+            searchQuery: 'dermatologist how to fix dark circles and puffy eyes science',
+            tags: ['tudományos', 'rutin', 'bőrgyógyászat']
+          },
+          {
+            platform: 'youtube',
+            title: 'Prostaglandin Lash Serums & Orbital Fat Loss Explained',
+            creatorStyle: 'Szemész & Bőrgyógyász elemzés • 10 perc',
+            description: 'Részletes magyarázat arról, miért okozhatnak bizonyos szempillaszérumok beesett szemeket, és hogyan ismerd fel a biztonságos alternatívákat.',
+            searchQuery: 'lash serum orbital fat loss ophthalmologist dermatologist explained',
+            tags: ['biztonság', 'szempillaszérum', 'PAP']
+          },
+          {
+            platform: 'youtube',
+            title: 'Complete Evidence-Based Eye Area Skincare & Grooming Guide',
+            creatorStyle: 'Komplex protokoll • 14 perc',
+            description: 'Összefoglaló útmutató, amely egy rendszerbe foglalja a fényvédelmet, alvást, nyirokelvezetést és szemöldökápolást.',
+            searchQuery: 'complete eye area improvement science skincare grooming routine',
+            tags: ['protokoll', '90 napos terv', 'összefoglaló']
+          }
+        ],
+        sources: [
+          {
+            title: 'Periorbital Hyperpigmentation: Etiology, Classification, and Treatments',
+            publication: 'PubMed / Journal of Clinical and Aesthetic Dermatology',
+            category: 'Tudományos / PubMed',
+            whyCredible: 'Lektorált orvosi összefoglaló tanulmány a sötét karikák 3 fő típusáról és klinikai kezeléséről.',
+            summary: 'Részletezi a pigmentált, vaszkuláris és strukturális karikák kialakulását, valamint a helyi hatóanyagok és orvosi kezelések bizonyított hatékonyságát.',
+            urlType: 'pubmed',
+            searchQuery: 'Periorbital Hyperpigmentation etiology classification treatments'
+          },
+          {
+            title: 'Prostaglandin-Associated Periorbitopathy (PAP): Clinical Review',
+            publication: 'PubMed / Survey of Ophthalmology',
+            category: 'Tudományos / PubMed',
+            whyCredible: 'Szemészeti szakirodalmi áttekintés a prosztaglandin-analógok szemkörnyéki mellékhatásairól.',
+            summary: 'Dokumentálja a prosztaglandin-alapú szempillaszérumok és cseppek által kiváltott zsírszövet-vesztést és a szemhéj sötétedését.',
+            urlType: 'pubmed',
+            searchQuery: 'Prostaglandin-Associated Periorbitopathy orbital fat loss'
+          },
+          {
+            title: 'Topical Caffeine and Periorbital Edema / Microcirculation',
+            publication: 'Google Scholar / Skin Pharmacology Studies',
+            category: 'Google Scholar',
+            whyCredible: 'Klinikai mérések a helyi koffein mikrokeringésre és duzzanatra gyakorolt hatásáról.',
+            summary: 'Igazolja, hogy a koffeines gélek rövid távon csökkentik a reggeli ödémát, de hosszú távú szerkezeti változást nem okoznak.',
+            urlType: 'scholar',
+            searchQuery: 'topical caffeine periorbital edema dark circles clinical study'
+          },
+          {
+            title: 'How to Care for the Delicate Skin Around Your Eyes & Dark Circles',
+            publication: 'American Academy of Dermatology (AAD)',
+            category: 'Orvosi / Szakmai portál',
+            whyCredible: 'Az Amerikai Bőrgyógyászati Akadémia hivatalos, bizonyítékalapú lakossági útmutatója.',
+            summary: 'Gyakorlati ajánlások a fényvédelemről, alvásról, hideg borogatásról és a bőrgyógyászati kezelésekről.',
+            urlType: 'web',
+            searchQuery: 'site:aad.org dark circles under eyes skin care'
+          },
+          {
+            title: 'Retinoids in the Treatment of Skin Aging: Clinical Efficacy and Safety',
+            publication: 'PubMed / Clinical Interventions in Aging',
+            category: 'Tudományos / PubMed',
+            whyCredible: 'Széles körben idézett klinikai áttekintés a retinoidok kollagénépítő hatásáról.',
+            summary: 'Bemutatja, hogyan vastagítják a retinoidok a fotokárosodott bőrt és csökkentik a finom ráncokat 8–12 hét alatt.',
+            urlType: 'pubmed',
+            searchQuery: 'Retinoids treatment of skin aging clinical efficacy safety'
+          },
+          {
+            title: 'SkincareAddiction & Evidence-Based Eye Area Discussions',
+            publication: 'Reddit (r/SkincareAddiction)',
+            category: 'Közösségi / Reddit',
+            whyCredible: 'Valós felhasználói tapasztalatok, előtte-utána beszámolók és mellékhatás-tapasztalatok nagy mintán.',
+            summary: 'Hasznos gyakorlati tapasztalatok konkrét, nem csípő fényvédőkről, retinoid-toleranciáról és szemöldökápolásról.',
+            urlType: 'reddit',
+            searchQuery: 'SkincareAddiction dark circles puffy eyes dermatologist routine'
+          }
+        ]
+      };
+
+      // =======================================================================
+      // 4. DOM ELEMEK
+      // =======================================================================
+      const dom = {
+        form: document.getElementById('researchForm'),
+        topicInput: document.getElementById('topicInput'),
+        clearInputBtn: document.getElementById('clearInputBtn'),
+        submitBtn: document.getElementById('submitBtn'),
+        loaderSection: document.getElementById('loaderSection'),
+        loaderTopicTitle: document.getElementById('loaderTopicTitle'),
+        loaderPercent: document.getElementById('loaderPercent'),
+        loaderBar: document.getElementById('loaderBar'),
+        errorSection: document.getElementById('errorSection'),
+        errorDetailText: document.getElementById('errorDetailText'),
+        reportContainer: document.getElementById('reportContainer'),
+        historyOverlay: document.getElementById('historyOverlay'),
+        historyList: document.getElementById('historyList'),
+        historyCountBadge: document.getElementById('historyCountBadge'),
+        settingsOverlay: document.getElementById('settingsOverlay'),
+        customApiKeyInput: document.getElementById('customApiKeyInput'),
+        apiTestStatus: document.getElementById('apiTestStatus'),
+        toastEl: document.getElementById('toastEl'),
+        toastMsg: document.getElementById('toastMsg')
+      };
+
+      // =======================================================================
+      // 5. SEGÉDFÜGGVÉNYEK (Escape, Rich Text, URL-építő, Toast, Másolás)
+      // =======================================================================
+      function escapeHtml(val) {
+        return String(val == null ? '' : val)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function formatBold(val) {
+        return escapeHtml(val).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      }
+
+      function clampPercent(val, fallback) {
+        const n = Number(val);
+        if (!Number.isFinite(n)) return fallback;
+        return Math.max(0, Math.min(100, Math.round(n)));
+      }
+
+      function buildVideoUrl(video) {
+        const q = encodeURIComponent(video.searchQuery || video.title || state.currentReport?.originalQuery || '');
+        if ((video.platform || '').toLowerCase() === 'tiktok') {
+          return 'https://www.tiktok.com/search?q=' + q;
+        }
+        return 'https://www.youtube.com/results?search_query=' + q;
+      }
+
+      function buildSourceUrl(src) {
+        const q = encodeURIComponent(src.searchQuery || ((src.title || '') + ' ' + (src.publication || '')).trim());
+        const t = (src.urlType || '').toLowerCase();
+        const cat = (src.category || '').toLowerCase();
+        if (t === 'pubmed' || cat.includes('pubmed')) {
+          return 'https://pubmed.ncbi.nlm.nih.gov/?term=' + q;
+        }
+        if (t === 'scholar' || cat.includes('scholar')) {
+          return 'https://scholar.google.com/scholar?q=' + q;
+        }
+        if (t === 'wikipedia' || cat.includes('wiki')) {
+          return 'https://en.wikipedia.org/w/index.php?search=' + q;
+        }
+        if (t === 'reddit' || cat.includes('reddit')) {
+          return 'https://www.reddit.com/search/?q=' + q;
+        }
+        return 'https://www.google.com/search?q=' + q;
+      }
+
+      let toastTimer = null;
+      function showToast(msg) {
+        dom.toastMsg.textContent = msg;
+        dom.toastEl.classList.add('show');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => dom.toastEl.classList.remove('show'), 3200);
+      }
+
+      function copyToClipboardSafe(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.top = '-9999px';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, text.length);
+        let ok = false;
+        try {
+          ok = document.execCommand('copy');
+        } catch (_e) {
+          ok = false;
+        }
+        document.body.removeChild(ta);
+        return ok;
+      }
+
+      function getStatIconSvg(name) {
+        const map = {
+          clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+          dna: '<path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="M17 6l-2.5-2.5"/><path d="M14 8l-1-1"/><path d="M7 18l2.5 2.5"/>',
+          sparkles: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/>',
+          shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+          chart: '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+          flame: '<path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/>'
+        };
+        return map[name] || map.sparkles;
+      }
+
+      // =======================================================================
+      // 6. BULLETPROOF GEMINI API PIPELINE + JSON REPAIR + NORMALIZATION
+      // =======================================================================
+      function getActiveApiKey() {
+        const custom = SafeStore.get(APIKEY_STORE, '');
+        return (typeof custom === 'string' && custom.trim()) ? custom.trim() : apiKey;
+      }
+
+      /**
+       * Biztonságos JSON-kinyerés: levágja a kódblokkokat, kiveszi az első { ... } objektumot,
+       * javítja a felesleges záró vesszőket és vezérlőkaraktereket.
+       */
+      function safeParseJson(rawText) {
+        if (typeof rawText !== 'string' || !rawText.trim()) {
+          throw new Error('Üres szöveges válasz érkezett az AI-tól.');
+        }
+        let cleaned = rawText.trim();
+
+        // Ha markdown kódblokkban érkezett
+        const fence = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+        if (fence && fence[1]) {
+          cleaned = fence[1].trim();
+        }
+
+        const firstBrace = cleaned.indexOf('{');
+        const lastBrace = cleaned.lastIndexOf('}');
+        if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
+          throw new Error('A válasz nem tartalmaz érvényes JSON objektumot.');
+        }
+        cleaned = cleaned.slice(firstBrace, lastBrace + 1);
+
+        // 1. próbálkozás: közvetlen parse
+        try {
+          return JSON.parse(cleaned);
+        } catch (_e1) {
+          // 2. próbálkozás: záró vesszők és nyers vezérlőkarakterek tisztítása
+          const repaired = cleaned
+            .replace(/,\s*([}\]])/g, '$1')
+            .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '');
+          return JSON.parse(repaired);
+        }
+      }
+
+      /**
+       * Garantálja, hogy minden mező, tömb és szám létezik, így a renderelés SOHA nem száll el.
+       */
+      function normalizeReportData(raw, topic) {
+        const d = (raw && typeof raw === 'object') ? raw : {};
+        const safeTopic = String(topic || d.originalQuery || d.topicTitle || 'Kutatott téma');
+
+        const cred = (d.credibility && typeof d.credibility === 'object') ? d.credibility : {};
+        const execArr = Array.isArray(d.executiveSummary)
+          ? d.executiveSummary.filter(Boolean).map(String)
+          : (d.executiveSummary ? [String(d.executiveSummary)] : ['Az összefoglaló sikeresen elkészült a megadott témáról.']);
+
+        const defaultMetrics = [
+          { label: 'Elemzett téma', value: safeTopic.slice(0, 18), subtext: 'Teljes körű AI mélyelemzés és összehasonlítás.', accent: 'indigo', icon: 'sparkles' },
+          { label: 'Tudományos alap', value: clampPercent(cred.scientificBase, 70) + '%', subtext: 'A szakirodalmi alátámasztottság becsült szintje.', accent: 'emerald', icon: 'shield' },
+          { label: 'Hype index', value: clampPercent(cred.socialMediaHype, 55) + '%', subtext: 'Közösségi médiás túlzások és virális trendek aránya.', accent: 'amber', icon: 'flame' },
+          { label: 'Olvasási idő', value: (Number(d.readingTimeMinutes) || 7) + ' perc', subtext: 'Strukturált összefoglaló, infografika és forráslista.', accent: 'cyan', icon: 'clock' }
+        ];
+
+        const rawMetrics = Array.isArray(d.keyMetrics) && d.keyMetrics.length > 0 ? d.keyMetrics : defaultMetrics;
+        const keyMetrics = rawMetrics.slice(0, 4).map((m, idx) => ({
+          label: String(m?.label || defaultMetrics[idx % 4].label),
+          value: String(m?.value || '—'),
+          subtext: String(m?.subtext || ''),
+          accent: ['indigo', 'cyan', 'emerald', 'amber', 'rose'].includes(m?.accent) ? m.accent : defaultMetrics[idx % 4].accent,
+          icon: String(m?.icon || defaultMetrics[idx % 4].icon)
+        }));
+        while (keyMetrics.length < 4) {
+          keyMetrics.push(defaultMetrics[keyMetrics.length]);
+        }
+
+        const rawFactors = Array.isArray(d.impactFactors) && d.impactFactors.length > 0 ? d.impactFactors : [
+          {
+            name: 'Bizonyítékalapú alapmódszerek',
+            effectiveness: 82,
+            evidence: 88,
+            riskLevel: 'Biztonságos',
+            detail: 'A téma tudományosan leginkább alátámasztott gyakorlati elemei.'
+          }
+        ];
+        const impactFactors = rawFactors.map(f => ({
+          name: String(f?.name || 'Tényező'),
+          effectiveness: clampPercent(f?.effectiveness, 60),
+          evidence: clampPercent(f?.evidence, 60),
+          riskLevel: String(f?.riskLevel || 'Mérsékelt'),
+          detail: String(f?.detail || '')
+        }));
+
+        const rawChapters = Array.isArray(d.deepDiveChapters) && d.deepDiveChapters.length > 0 ? d.deepDiveChapters : [
+          {
+            number: '01',
+            title: 'A téma részletes áttekintése',
+            subtitle: 'Alapfogalmak és összefüggések',
+            paragraphs: execArr,
+            highlights: [],
+            callout: { type: 'science', title: 'Kulcs tanulság', text: 'Mindig érdemes különválasztani a bizonyított tényeket a népszerű trendektől.' }
+          }
+        ];
+        const deepDiveChapters = rawChapters.map((ch, idx) => ({
+          number: String(ch?.number || String(idx + 1).padStart(2, '0')),
+          title: String(ch?.title || (idx + 1) + '. Fejezet'),
+          subtitle: String(ch?.subtitle || ''),
+          paragraphs: Array.isArray(ch?.paragraphs) ? ch.paragraphs.filter(Boolean).map(String) : [String(ch?.paragraphs || '')],
+          highlights: Array.isArray(ch?.highlights) ? ch.highlights.filter(Boolean).map(String) : [],
+          callout: {
+            type: ['science', 'tip', 'warning'].includes(ch?.callout?.type) ? ch.callout.type : 'science',
+            title: String(ch?.callout?.title || 'Kulcs tanulság'),
+            text: String(ch?.callout?.text || '')
+          }
+        }));
+
+        const rawRoadmap = Array.isArray(d.roadmap) && d.roadmap.length > 0 ? d.roadmap : [
+          {
+            stepNumber: 1,
+            phase: '1. szakasz • Alapok',
+            title: 'Tájékozódás és alapok lefektetése',
+            description: 'Kezdj a legbiztonságosabb, legjobban bizonyított lépésekkel.',
+            actions: ['Ellenőrizd a megbízható szakmai forrásokat.', 'Kerüld a szélsőséges, nem bizonyított módszereket.']
+          }
+        ];
+        const roadmap = rawRoadmap.map((r, idx) => ({
+          stepNumber: Number(r?.stepNumber) || (idx + 1),
+          phase: String(r?.phase || (idx + 1) + '. szakasz'),
+          title: String(r?.title || 'Lépés ' + (idx + 1)),
+          description: String(r?.description || ''),
+          actions: Array.isArray(r?.actions) ? r.actions.filter(Boolean).map(String) : []
+        }));
+
+        const rawMyths = Array.isArray(d.factVsMyth) && d.factVsMyth.length > 0 ? d.factVsMyth : [
+          {
+            myth: 'Az internetes gyors megoldások azonnal, kockázat nélkül működnek.',
+            fact: 'A valódi, fenntartható eredmények mögött szinte mindig következetes, bizonyítékalapú folyamat áll.',
+            badge: 'Tévhit'
+          }
+        ];
+        const factVsMyth = rawMyths.map(m => ({
+          myth: String(m?.myth || ''),
+          fact: String(m?.fact || ''),
+          badge: String(m?.badge || 'Tévhit')
+        }));
+
+        const rawVideos = Array.isArray(d.videos) && d.videos.length > 0 ? d.videos : [
+          {
+            platform: 'tiktok',
+            title: safeTopic + ' — gyors szakértői összefoglaló',
+            creatorStyle: 'Szakértői videók • 60 mp',
+            description: 'Rövid, vizuális magyarázatok és gyakorlati tippek a témában.',
+            searchQuery: safeTopic + ' expert tips explained',
+            tags: ['gyors tipp', 'vizuális']
+          },
+          {
+            platform: 'youtube',
+            title: safeTopic + ' — részletes tudományos elemzés',
+            creatorStyle: 'Mélyelemzés • 10–15 perc',
+            description: 'Átfogó, forrásokkal alátámasztott videós előadások a témáról.',
+            searchQuery: safeTopic + ' science explained full guide',
+            tags: ['mélyelemzés', 'tudomány']
+          }
+        ];
+        const videos = rawVideos.map(v => ({
+          platform: (String(v?.platform || '').toLowerCase() === 'tiktok') ? 'tiktok' : 'youtube',
+          title: String(v?.title || safeTopic),
+          creatorStyle: String(v?.creatorStyle || 'Ajánlott tartalom'),
+          description: String(v?.description || ''),
+          searchQuery: String(v?.searchQuery || v?.title || safeTopic),
+          tags: Array.isArray(v?.tags) ? v.tags.slice(0, 4).map(String) : []
+        }));
+
+        const rawSources = Array.isArray(d.sources) && d.sources.length > 0 ? d.sources : [
+          {
+            title: safeTopic + ' — PubMed szakirodalmi keresés',
+            publication: 'PubMed / NIH',
+            category: 'Tudományos / PubMed',
+            whyCredible: 'Nemzetközi orvosi és élettudományi kutatási adatbázis.',
+            summary: 'Közvetlen hozzáférés a témához kapcsolódó lektorált tudományos publikációkhoz.',
+            urlType: 'pubmed',
+            searchQuery: safeTopic
+          },
+          {
+            title: safeTopic + ' — Google Scholar tanulmányok',
+            publication: 'Google Scholar',
+            category: 'Google Scholar',
+            whyCredible: 'Tudományos folyóiratok és egyetemi publikációk gyűjtőhelye.',
+            summary: 'Széles körű akadémiai cikkek, összefoglaló tanulmányok és idézettségi adatok.',
+            urlType: 'scholar',
+            searchQuery: safeTopic
+          }
+        ];
+        const sources = rawSources.map(s => ({
+          title: String(s?.title || 'Szakmai forrás'),
+          publication: String(s?.publication || 'Kutatási adatbázis'),
+          category: String(s?.category || 'Szakmai forrás'),
+          whyCredible: String(s?.whyCredible || 'Megbízható, ellenőrizhető szakmai forrás.'),
+          summary: String(s?.summary || ''),
+          urlType: String(s?.urlType || 'web'),
+          searchQuery: String(s?.searchQuery || s?.title || safeTopic)
+        }));
+
+        return {
+          topicTitle: String(d.topicTitle || safeTopic),
+          originalQuery: safeTopic,
+          category: String(d.category || 'Mélyelemzés'),
+          readingTimeMinutes: Math.max(3, Math.min(25, Number(d.readingTimeMinutes) || 7)),
+          verdictBadge: String(d.verdictBadge || 'Tudományosan elemzett'),
+          isSample: Boolean(d.isSample),
+          createdAt: d.createdAt || Date.now(),
+          credibility: {
+            scientificBase: clampPercent(cred.scientificBase, 72),
+            expertConsensus: clampPercent(cred.expertConsensus, 70),
+            socialMediaHype: clampPercent(cred.socialMediaHype, 55),
+            note: String(cred.note || 'Az elemzés elválasztja a tudományosan bizonyított tényeket az internetes túlzásoktól.')
+          },
+          executiveSummary: execArr,
+          keyMetrics,
+          impactFactors,
+          deepDiveChapters,
+          roadmap,
+          factVsMyth,
+          videos,
+          sources
+        };
+      }
+
+      /**
+       * Prompt összeállítása az aktuális nyelv és mélység alapján
+       */
+      function buildResearchPrompt(topic, lang, depth) {
+        let langRule = 'Write ALL human-readable text in natural, eloquent, publication-grade HUNGARIAN (Magyar), even if the topic is in English or another language (keep well-known English trend/technical terms in parentheses where helpful).';
+        if (lang === 'en') {
+          langRule = 'Write ALL human-readable text in clear, authoritative, publication-grade ENGLISH.';
+        } else if (lang === 'auto') {
+          langRule = 'Detect the primary language of the topic and write ALL human-readable text in that exact language.';
+        }
+
+        const depthRule = depth === 'deep'
+          ? 'EXTRA DEEP MODE: Provide exhaustive, high-signal depth: 5 deepDiveChapters (3 dense paragraphs + 2-3 highlights each), 6 impactFactors, 4 roadmap phases, 4 factVsMyth cards, 8 videos (4 tiktok, 4 youtube), and 8 diverse sources.'
+          : 'DETAILED MODE: Provide thorough, genuinely insightful depth (no shallow fluff): 4 deepDiveChapters (2-3 rich paragraphs + 2 highlights each), 5-6 impactFactors, 3 roadmap phases, 4 factVsMyth cards, 6 videos (3 tiktok, 3 youtube), and 6 diverse sources.';
+
+        return `You are TudásTér AI, an elite science communicator, editorial researcher, and infographic designer.
+Analyze the following topic with exceptional depth, credibility, and nuance: "${topic}"
+
+STRICT RULES:
+1. ${langRule}
+2. ${depthRule}
+3. Be objective, evidence-based, and honest: clearly distinguish peer-reviewed science from viral social media hype or dangerous trends.
+4. Use **bold** sparingly inside executiveSummary and chapter paragraphs to emphasize key concepts.
+5. VIDEOS: Never invent URLs or fake video IDs! Provide a realistic, laser-focused "searchQuery" (prefer clear English search terms for global topics, or Hungarian for local topics) so the app opens exact real TikTok/YouTube search results.
+6. SOURCES: Reference genuine scientific journals, PubMed topics, Google Scholar reviews, reputable medical/professional portals, or major communities. Set "urlType" to one of: "pubmed", "scholar", "wikipedia", "reddit", or "web", with an accurate "searchQuery".
+7. Return ONLY a single valid JSON object. No markdown fences, no commentary before or after the JSON.
+
+REQUIRED JSON SHAPE:
+{
+  "topicTitle": "Editorial headline",
+  "category": "Short domain label",
+  "readingTimeMinutes": 8,
+  "verdictBadge": "Short overall verdict (e.g., Vegyes tudományos háttér / Nagy hype)",
+  "credibility": {
+    "scientificBase": 0-100,
+    "expertConsensus": 0-100,
+    "socialMediaHype": 0-100,
+    "note": "2-sentence balanced verdict separating science from hype"
+  },
+  "executiveSummary": ["Rich paragraph 1", "Rich paragraph 2"],
+  "keyMetrics": [
+    {
+      "label": "Short metric label",
+      "value": "Crisp stat (1-3 words)",
+      "subtext": "1-2 sentence explanation",
+      "accent": "indigo | cyan | emerald | amber | rose",
+      "icon": "clock | dna | sparkles | shield | chart | flame"
+    }
+  ],
+  "impactFactors": [
+    {
+      "name": "Method or factor name",
+      "effectiveness": 0-100,
+      "evidence": 0-100,
+      "riskLevel": "Biztonságos | Mérsékelt | Veszélyes",
+      "detail": "1-2 sentence explanation of effectiveness, evidence, and safety"
+    }
+  ],
+  "deepDiveChapters": [
+    {
+      "number": "01",
+      "title": "Chapter heading (cover: 1. What is it, 2. Science/biology, 3. What actually works, 4. Risks/pitfalls)",
+      "subtitle": "Short deck",
+      "paragraphs": ["Detailed paragraph 1", "Detailed paragraph 2"],
+      "highlights": ["Concrete takeaway bullet 1", "Concrete takeaway bullet 2"],
+      "callout": {
+        "type": "science | tip | warning",
+        "title": "Kulcs tanulság",
+        "text": "Punchy actionable or safety insight"
+      }
+    }
+  ],
+  "roadmap": [
+    {
+      "stepNumber": 1,
+      "phase": "1–2. hét • Alapok",
+      "title": "Phase title",
+      "description": "What to focus on in this phase",
+      "actions": ["Actionable step 1", "Actionable step 2"]
+    }
+  ],
+  "factVsMyth": [
+    {
+      "myth": "Popular misconception or viral internet claim",
+      "fact": "What evidence actually shows",
+      "badge": "Tévhit | Féligazság | Túlzó trend | Veszélyes tévhit"
+    }
+  ],
+  "videos": [
+    {
+      "platform": "tiktok | youtube",
+      "title": "Specific compelling video topic title",
+      "creatorStyle": "Creator type & format (e.g., Bőrgyógyász • 60 mp)",
+      "description": "2 sentences explaining what the user will learn from watching",
+      "searchQuery": "Exact high-precision search query for TikTok or YouTube",
+      "tags": ["tag1", "tag2", "tag3"]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Credible paper, guideline, or reference title",
+      "publication": "Journal or authoritative organization",
+      "category": "Tudományos / PubMed | Google Scholar | Orvosi / Szakmai portál | Közösségi / Reddit",
+      "whyCredible": "1 sentence explaining why this source is trustworthy",
+      "summary": "1-2 sentences summarizing its findings",
+      "urlType": "pubmed | scholar | wikipedia | reddit | web",
+      "searchQuery": "Exact search query to locate the source"
+    }
+  ]
+}`;
+      }
+
+      /**
+       * Egyetlen fetch kísérlet exponenciális visszalépéssel (429/500/503 esetén 1s, 2s, 4s)
+       */
+      async function fetchWithRetry(url, payload, maxRetries) {
+        let delay = 1000;
+        let lastResp = null;
+        let lastErr = null;
+
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+          try {
+            const resp = await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+
+            if (resp.ok) return { ok: true, response: resp };
+
+            lastResp = resp;
+            const transient = resp.status === 429 || resp.status === 500 || resp.status === 502 || resp.status === 503 || resp.status === 504;
+            if (transient && attempt < maxRetries) {
+              await new Promise(r => setTimeout(r, delay));
+              delay *= 2;
+              continue;
+            }
+            return { ok: false, response: resp };
+          } catch (err) {
+            lastErr = err;
+            if (attempt < maxRetries) {
+              await new Promise(r => setTimeout(r, delay));
+              delay *= 2;
+              continue;
+            }
+          }
+        }
+        return { ok: false, response: lastResp, error: lastErr };
+      }
+
+      /**
+       * Robusztus Gemini hívó lánc: több modell és JSON-mód automatikus tartalékkal.
+       * SOHA nem kombinálja a google_search toolt a responseMimeType: "application/json"-nal!
+       */
+      async function callGeminiWithFallback(promptText, isQuickTest) {
+        const key = getActiveApiKey();
+        const errors = [];
+
+        for (let i = 0; i < MODEL_CANDIDATES.length; i++) {
+          const candidate = MODEL_CANDIDATES[i];
+          const url = 'https://generativelanguage.googleapis.com/v1beta/models/' +
+            candidate.model + ':generateContent?key=' + encodeURIComponent(key);
+
+          const generationConfig = {
+            temperature: isQuickTest ? 0.1 : 0.4,
+            maxOutputTokens: isQuickTest ? 128 : 8192
+          };
+          if (candidate.jsonMode && !isQuickTest) {
+            generationConfig.responseMimeType = 'application/json';
+          }
+
+          const payload = {
+            contents: [{ parts: [{ text: promptText }] }],
+            generationConfig
+          };
+
+          const result = await fetchWithRetry(url, payload, isQuickTest ? 1 : 2);
+
+          if (!result.ok) {
+            if (result.response) {
+              const status = result.response.status;
+              let msg = 'HTTP ' + status;
+              try {
+                const errJson = await result.response.json();
+                if (errJson?.error?.message) msg += ': ' + errJson.error.message;
+              } catch (_e) {}
+              errors.push(candidate.model + ' (' + msg + ')');
+
+              // Ha hitelesítési hiba (401/403), nem érdemes a többi modellen végigmenni
+              if (status === 401 || status === 403) {
+                throw new Error('Hitelesítési vagy API-kulcs hiba (' + msg + '). Ellenőrizd a Beállításokban az API kulcsot!');
+              }
+            } else {
+              errors.push(candidate.model + ' (Hálózati hiba: ' + (result.error?.message || 'ismeretlen') + ')');
+            }
+            continue;
+          }
+
+          try {
+            const data = await result.response.json();
+            const parts = data?.candidates?.[0]?.content?.parts || [];
+            const fullText = parts.map(p => p.text || '').join('').trim();
+
+            if (!fullText) {
+              errors.push(candidate.model + ' (Üres tartalom)');
+              continue;
+            }
+
+            if (isQuickTest) {
+              return { model: candidate.model, text: fullText };
+            }
+
+            const parsed = safeParseJson(fullText);
+            return { model: candidate.model, data: parsed };
+          } catch (parseErr) {
+            errors.push(candidate.model + ' (Feldolgozási hiba: ' + parseErr.message + ')');
+            continue;
+          }
+        }
+
+        throw new Error('Az AI szerver jelenleg nem adott érvényes választ. Részletek: ' + (errors[0] || 'Ismeretlen hálózati hiba.'));
+      }
+
+      // =======================================================================
+      // 7. ANIMÁLT BETÖLTŐ VEZÉRLŐ
+      // =======================================================================
+      let loaderTimer = null;
+
+      function startLoader(topic) {
+        state.isLoading = true;
+        dom.submitBtn.disabled = true;
+        dom.errorSection.classList.add('hidden');
+        dom.reportContainer.classList.add('hidden');
+        dom.loaderSection.classList.remove('hidden');
+        dom.loaderTopicTitle.textContent = '„' + topic + '” mélyelemzése...';
+
+        let pct = 10;
+        setLoaderState(pct, 0);
+
+        if (loaderTimer) clearInterval(loaderTimer);
+        loaderTimer = setInterval(() => {
+          if (pct < 92) {
+            pct = Math.min(92, pct + (pct < 45 ? 7 : pct < 75 ? 4 : 1.5));
+            const step = pct < 28 ? 0 : pct < 54 ? 1 : pct < 78 ? 2 : 3;
+            setLoaderState(Math.round(pct), step);
+          }
+        }, 600);
+
+        dom.loaderSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      function setLoaderState(pct, activeStep) {
+        dom.loaderBar.style.width = pct + '%';
+        dom.loaderPercent.textContent = pct + '%';
+
+        document.querySelectorAll('.step-item').forEach((el, idx) => {
+          el.classList.remove('active', 'done');
+          if (idx < activeStep) el.classList.add('done');
+          else if (idx === activeStep) el.classList.add('active');
+        });
+      }
+
+      function stopLoader() {
+        state.isLoading = false;
+        dom.submitBtn.disabled = false;
+        if (loaderTimer) {
+          clearInterval(loaderTimer);
+          loaderTimer = null;
+        }
+        dom.loaderSection.classList.add('hidden');
+      }
+
+      // =======================================================================
+      // 8. RIPORT RENDERELŐ MOTOR
+      // =======================================================================
+      function renderReport(reportData) {
+        const rep = normalizeReportData(reportData, reportData?.originalQuery || reportData?.topicTitle);
+        state.currentReport = rep;
+        state.chartSort = 'effectiveness';
+        state.videoFilter = 'all';
+        state.chaptersOpen = true;
+
+        dom.errorSection.classList.add('hidden');
+        dom.reportContainer.classList.remove('hidden');
+
+        // A) Header & Summary
+        document.getElementById('repCategory').textContent = rep.category;
+        document.getElementById('repReadTime').textContent = rep.readingTimeMinutes + ' perc olvasás';
+        document.getElementById('repVerdict').textContent = rep.verdictBadge;
+
+        const modeBadge = document.getElementById('repSourceModeBadge');
+        if (rep.isSample) {
+          modeBadge.textContent = 'Azonnali Minta (Offline)';
+          modeBadge.classList.remove('hidden');
+        } else {
+          modeBadge.textContent = 'Élő AI Mélyelemzés';
+          modeBadge.classList.remove('hidden');
+        }
+
+        document.getElementById('repTitle').textContent = rep.topicTitle;
+        document.getElementById('repOriginalQuery').textContent = 'Kutatott kifejezés: „' + rep.originalQuery + '”';
+        document.getElementById('repSummary').innerHTML = rep.executiveSummary
+          .map(p => '<p>' + formatBold(p) + '</p>')
+          .join('');
+
+        // B1) 3 SVG Körgyűrű (Hitelességi Mérőóra)
+        const c = rep.credibility;
+        const circumference = 289.03; // 2 * PI * 46
+        const setGauge = (arcId, valId, pct) => {
+          const arc = document.getElementById(arcId);
+          document.getElementById(valId).textContent = pct + '%';
+          arc.style.strokeDashoffset = circumference;
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              arc.style.strokeDashoffset = circumference - (pct / 100) * circumference;
+            }, 60);
+          });
+        };
+
+        setGauge('gaugeSciArc', 'gaugeSciVal', c.scientificBase);
+        setGauge('gaugeExpArc', 'gaugeExpVal', c.expertConsensus);
+        setGauge('gaugeHypeArc', 'gaugeHypeVal', c.socialMediaHype);
+        document.getElementById('credibilityNote').innerHTML = '<strong>Összegző értékelés:</strong> ' + formatBold(c.note);
+
+        // B2) 4 Bento Stat Kártya
+        renderKeyMetrics(rep.keyMetrics);
+
+        // B3) Interaktív Hatékonyság vs. Bizonyíték Diagram
+        syncSortButtons();
+        renderImpactChart(rep.impactFactors);
+
+        // C) Mélyelemző Fejezetek
+        renderChapters(rep.deepDiveChapters);
+
+        // D) Útiterv
+        renderRoadmap(rep.roadmap);
+
+        // E) Tény vs. Mítosz
+        renderMyths(rep.factVsMyth);
+
+        // F) TikTok & YouTube Videók
+        syncVideoFilterButtons();
+        renderVideos(rep.videos);
+
+        // G) Források
+        renderSources(rep.sources);
+
+        setTimeout(() => {
+          dom.reportContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 80);
+      }
+
+      function renderKeyMetrics(metrics) {
+        const colors = {
+          indigo: { bg: 'rgba(99,102,241,0.16)', border: 'rgba(129,140,248,0.35)', text: '#c7d2fe' },
+          cyan: { bg: 'rgba(6,182,212,0.16)', border: 'rgba(34,211,238,0.35)', text: '#67e8f9' },
+          emerald: { bg: 'rgba(16,185,129,0.16)', border: 'rgba(52,211,153,0.35)', text: '#6ee7b7' },
+          amber: { bg: 'rgba(245,158,11,0.16)', border: 'rgba(251,191,36,0.35)', text: '#fcd34d' },
+          rose: { bg: 'rgba(244,63,94,0.16)', border: 'rgba(251,113,133,0.35)', text: '#fda4af' }
+        };
+
+        document.getElementById('keyMetricsGrid').innerHTML = metrics.map(m => {
+          const st = colors[m.accent] || colors.indigo;
+          return `
+            <div class="glass-card glass-hover stat-card">
+              <div class="stat-top">
+                <span class="stat-label">${escapeHtml(m.label)}</span>
+                <div class="stat-icon" style="background:${st.bg}; border-color:${st.border}; color:${st.text};">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                    ${getStatIconSvg(m.icon)}
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <div class="stat-value" style="color:${st.text};">${escapeHtml(m.value)}</div>
+                <p class="stat-sub">${escapeHtml(m.subtext)}</p>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function renderImpactChart(factors) {
+        const listEl = document.getElementById('impactChartList');
+        const sorted = factors.slice().sort((a, b) => {
+          return state.chartSort === 'evidence'
+            ? b.evidence - a.evidence
+            : b.effectiveness - a.effectiveness;
+        });
+
+        const riskBadgeClass = (lvl) => {
+          const s = (lvl || '').toLowerCase();
+          if (s.includes('veszély') || s.includes('danger') || s.includes('magas')) return 'badge-rose';
+          if (s.includes('biztonság') || s.includes('safe') || s.includes('alacsony')) return 'badge-emerald';
+          return 'badge-amber';
+        };
+
+        listEl.innerHTML = sorted.map((item, idx) => `
+          <div class="chart-row ${idx === 0 ? 'selected' : ''}" data-idx="${idx}" tabindex="0" role="button">
+            <div class="chart-row-top">
+              <span class="chart-name">${escapeHtml(item.name)}</span>
+              <span class="badge ${riskBadgeClass(item.riskLevel)}">Kockázat: ${escapeHtml(item.riskLevel)}</span>
+            </div>
+            <div class="bar-line">
+              <span class="bar-caption">Hatékonyság</span>
+              <div class="bar-track"><div class="bar-fill bar-eff" style="width:${item.effectiveness}%"></div></div>
+              <span class="bar-num" style="color:#67e8f9;">${item.effectiveness}%</span>
+            </div>
+            <div class="bar-line">
+              <span class="bar-caption">Bizonyíték</span>
+              <div class="bar-track"><div class="bar-fill bar-ev" style="width:${item.evidence}%"></div></div>
+              <span class="bar-num" style="color:#6ee7b7;">${item.evidence}%</span>
+            </div>
+          </div>
+        `).join('');
+
+        const showDetail = (item) => {
+          document.getElementById('inspectorTitle').textContent = item.name + ' — Szakmai értékelés';
+          document.getElementById('inspectorText').textContent = item.detail || 'Részletes értékelés a diagramhoz.';
+        };
+
+        if (sorted[0]) showDetail(sorted[0]);
+
+        listEl.querySelectorAll('.chart-row').forEach(row => {
+          const activate = () => {
+            listEl.querySelectorAll('.chart-row').forEach(r => r.classList.remove('selected'));
+            row.classList.add('selected');
+            const item = sorted[Number(row.dataset.idx)];
+            if (item) showDetail(item);
+          };
+          row.addEventListener('click', activate);
+          row.addEventListener('mouseenter', activate);
+          row.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              activate();
+            }
+          });
+        });
+      }
+
+      function renderChapters(chapters) {
+        const container = document.getElementById('chaptersContainer');
+        const calloutColors = {
+          science: { cls: 'callout-science', color: '#a5b4fc' },
+          tip: { cls: 'callout-tip', color: '#6ee7b7' },
+          warning: { cls: 'callout-warning', color: '#fcd34d' }
+        };
+
+        container.innerHTML = chapters.map(ch => {
+          const cCfg = calloutColors[ch.callout?.type] || calloutColors.science;
+          const bulletsHtml = ch.highlights && ch.highlights.length
+            ? `<ul class="chapter-bullets">${ch.highlights.map(h => `<li><span class="bullet-dot"></span><span>${formatBold(h)}</span></li>`).join('')}</ul>`
+            : '';
+          const calloutHtml = ch.callout && ch.callout.text
+            ? `<div class="callout-box ${cCfg.cls}">
+                 <div style="color:${cCfg.color}; flex-shrink:0; margin-top:2px;">
+                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                     <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                   </svg>
+                 </div>
+                 <div>
+                   <div class="callout-title" style="color:${cCfg.color};">${escapeHtml(ch.callout.title)}</div>
+                   <div class="callout-text">${formatBold(ch.callout.text)}</div>
+                 </div>
+               </div>`
+            : '';
+
+          return `
+            <article class="glass-card chapter-card">
+              <button type="button" class="chapter-btn">
+                <div class="chapter-head-left">
+                  <span class="chapter-num">${escapeHtml(ch.number)}</span>
+                  <div>
+                    <h4 class="chapter-title">${escapeHtml(ch.title)}</h4>
+                    ${ch.subtitle ? `<p class="chapter-sub">${escapeHtml(ch.subtitle)}</p>` : ''}
+                  </div>
+                </div>
+                <span class="chapter-chevron open no-print">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </span>
+              </button>
+              <div class="chapter-body">
+                ${ch.paragraphs.map(p => `<p>${formatBold(p)}</p>`).join('')}
+                ${bulletsHtml}
+                ${calloutHtml}
+              </div>
+            </article>
+          `;
+        }).join('');
+
+        container.querySelectorAll('.chapter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const card = btn.closest('.chapter-card');
+            const body = card.querySelector('.chapter-body');
+            const chev = btn.querySelector('.chapter-chevron');
+            const hidden = body.classList.toggle('hidden');
+            chev.classList.toggle('open', !hidden);
+          });
+        });
+      }
+
+      function renderRoadmap(steps) {
+        document.getElementById('roadmapList').innerHTML = steps.map((s, idx) => {
+          const isLast = idx === steps.length - 1;
+          const actionsHtml = s.actions && s.actions.length
+            ? `<ul class="action-list">${s.actions.map(a => `
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:3px;">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>${formatBold(a)}</span>
+                </li>`).join('')}</ul>`
+            : '';
+
+          return `
+            <div class="roadmap-item">
+              <div class="roadmap-rail">
+                <div class="roadmap-num"><div class="roadmap-num-inner">${escapeHtml(s.stepNumber)}</div></div>
+                ${!isLast ? '<div class="roadmap-line"></div>' : ''}
+              </div>
+              <div class="roadmap-body">
+                <span class="badge badge-cyan">${escapeHtml(s.phase)}</span>
+                <h4 class="roadmap-title">${escapeHtml(s.title)}</h4>
+                <p class="roadmap-desc">${formatBold(s.description)}</p>
+                ${actionsHtml}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function renderMyths(items) {
+        document.getElementById('mythGrid').innerHTML = items.map(m => `
+          <div class="glass-card myth-card">
+            <div class="myth-part">
+              <div class="mf-header" style="color:#fda4af;">
+                <span>✕ Mítosz / Tévhit</span>
+                <span class="badge badge-rose" style="padding:2px 8px; font-size:0.68rem;">${escapeHtml(m.badge)}</span>
+              </div>
+              <p class="myth-text">${escapeHtml(m.myth)}</p>
+            </div>
+            <div class="fact-part">
+              <div class="mf-header" style="color:#6ee7b7;">
+                <span>✓ Bizonyított valóság</span>
+              </div>
+              <p class="fact-text">${formatBold(m.fact)}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function renderVideos(videos) {
+        const grid = document.getElementById('videosGrid');
+        const filtered = videos.filter(v => state.videoFilter === 'all' || v.platform === state.videoFilter);
+
+        if (!filtered.length) {
+          grid.innerHTML = '<p style="color:var(--text-muted); font-size:0.88rem;">Ebben a szűrésben nincs megjeleníthető videóajánlat.</p>';
+          return;
+        }
+
+        grid.innerHTML = filtered.map(v => {
+          const isTT = v.platform === 'tiktok';
+          const url = buildVideoUrl(v);
+          const platIcon = isTT
+            ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="#00f2ea"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>'
+            : '<svg width="14" height="14" viewBox="0 0 24 24" fill="#f87171"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.4 31.4 0 0024 12a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>';
+
+          return `
+            <div class="video-card">
+              <div>
+                <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="video-banner ${isTT ? 'banner-tiktok' : 'banner-youtube'}">
+                  <div class="video-banner-top">
+                    <span class="plat-tag ${isTT ? 'plat-tiktok' : 'plat-youtube'}">${platIcon}<span>${isTT ? 'TikTok' : 'YouTube'}</span></span>
+                    <span style="font-size:0.7rem; color:var(--text-secondary);">${escapeHtml(v.creatorStyle)}</span>
+                  </div>
+                  <div class="video-play-row">
+                    <div class="play-circle">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4" /></svg>
+                    </div>
+                    <div style="min-width:0;">
+                      <h4 class="video-title">${escapeHtml(v.title)}</h4>
+                    </div>
+                  </div>
+                </a>
+                <div class="video-body">
+                  <p class="video-desc">${escapeHtml(v.description)}</p>
+                  ${v.tags && v.tags.length ? `<div class="video-tags">${v.tags.map(t => `<span class="query-tag">#${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+                </div>
+              </div>
+              <div class="video-footer">
+                <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="video-cta ${isTT ? 'cta-tiktok' : 'cta-youtube'}">
+                  <span>${isTT ? 'Videók megnyitása TikTokon' : 'Videók megnyitása YouTube-on'}</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function renderSources(sources) {
+        document.getElementById('sourcesGrid').innerHTML = sources.map(s => {
+          const url = buildSourceUrl(s);
+          const catLower = (s.category || '').toLowerCase();
+          const badgeCls = catLower.includes('pubmed') || catLower.includes('tudomány')
+            ? 'badge-emerald'
+            : catLower.includes('scholar')
+              ? 'badge-indigo'
+              : catLower.includes('reddit')
+                ? 'badge-amber'
+                : 'badge-cyan';
+
+          return `
+            <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="source-card">
+              <div>
+                <div class="source-top">
+                  <span class="badge ${badgeCls}">${escapeHtml(s.category)}</span>
+                </div>
+                <h4 class="source-title">${escapeHtml(s.title)}</h4>
+                <div class="source-pub">${escapeHtml(s.publication)}</div>
+                <p class="source-summary">${escapeHtml(s.summary)}</p>
+                <div class="source-why"><strong>Miért hiteles?</strong> ${escapeHtml(s.whyCredible)}</div>
+              </div>
+              <div class="source-link-row">
+                <span>Forrás megnyitása</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </div>
+            </a>
+          `;
+        }).join('');
+      }
+
+      // =======================================================================
+      // 9. ELŐZMÉNYEK & MARKDOWN EXPORT
+      // =======================================================================
+      function loadHistory() {
+        const stored = SafeStore.get(HISTORY_KEY, []);
+        state.history = Array.isArray(stored) ? stored : [];
+        renderHistoryUI();
+      }
+
+      function saveToHistory(report) {
+        if (!report || report.isSample) return;
+        const key = (report.originalQuery || report.topicTitle || '').toLowerCase().trim();
+        state.history = state.history.filter(h => (h.originalQuery || h.topicTitle || '').toLowerCase().trim() !== key);
+        state.history.unshift(report);
+        if (state.history.length > 15) state.history = state.history.slice(0, 15);
+        SafeStore.set(HISTORY_KEY, state.history);
+        renderHistoryUI();
+      }
+
+      function renderHistoryUI() {
+        dom.historyCountBadge.textContent = String(state.history.length);
+        if (!state.history.length) {
+          dom.historyList.innerHTML = `
+            <div style="text-align:center; padding:40px 16px; color:var(--text-muted);">
+              <p style="font-weight:600; color:#e2e8f0; margin-bottom:6px;">Még nincs mentett kutatásod</p>
+              <p style="font-size:0.8rem;">Az elkészült AI riportok automatikusan ide kerülnek.</p>
+            </div>
+          `;
+          return;
+        }
+
+        dom.historyList.innerHTML = state.history.map((item, idx) => {
+          const dt = item.createdAt ? new Date(item.createdAt).toLocaleString('hu-HU', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+          return `
+            <div class="history-item">
+              <button type="button" class="history-open" data-open="${idx}">
+                <div class="history-title">${escapeHtml(item.topicTitle || item.originalQuery)}</div>
+                <div class="history-meta">${escapeHtml(item.category || 'Riport')} • ${escapeHtml(dt)}</div>
+              </button>
+              <button type="button" class="icon-btn-sm icon-btn-del" data-del="${idx}" title="Törlés">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+                </svg>
+              </button>
+            </div>
+          `;
+        }).join('');
+
+        dom.historyList.querySelectorAll('[data-open]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const item = state.history[Number(btn.dataset.open)];
+            if (item) {
+              dom.topicInput.value = item.originalQuery || item.topicTitle;
+              syncClearButton();
+              renderReport(item);
+              dom.historyOverlay.classList.add('hidden');
+              showToast('Korábbi riport betöltve!');
+            }
+          });
+        });
+
+        dom.historyList.querySelectorAll('[data-del]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.history.splice(Number(btn.dataset.del), 1);
+            SafeStore.set(HISTORY_KEY, state.history);
+            renderHistoryUI();
+            showToast('Elem törölve.');
+          });
+        });
+      }
+
+      function reportToMarkdown(rep) {
+        const lines = [];
+        lines.push('# ' + rep.topicTitle);
+        lines.push(`*Kategória: ${rep.category} | Olvasási idő: ~${rep.readingTimeMinutes} perc | ${rep.verdictBadge}*\n`);
+        lines.push('## Összefoglaló');
+        rep.executiveSummary.forEach(p => lines.push(p + '\n'));
+        lines.push('## Hitelességi mutatók');
+        lines.push(`- Tudományos alap: **${rep.credibility.scientificBase}%**`);
+        lines.push(`- Szakértői konszenzus: **${rep.credibility.expertConsensus}%**`);
+        lines.push(`- Közösségi média hype: **${rep.credibility.socialMediaHype}%**\n`);
+        lines.push('## Hatékonyság vs. Bizonyíték');
+        rep.impactFactors.forEach(f => {
+          lines.push(`- **${f.name}** (Hatékonyság: ${f.effectiveness}%, Bizonyíték: ${f.evidence}%, Kockázat: ${f.riskLevel}): ${f.detail}`);
+        });
+        lines.push('\n## Részletes elemzés');
+        rep.deepDiveChapters.forEach(ch => {
+          lines.push(`### ${ch.number}. ${ch.title}`);
+          ch.paragraphs.forEach(p => lines.push(p + '\n'));
+          if (ch.callout?.text) lines.push(`> **${ch.callout.title}**: ${ch.callout.text}\n`);
+        });
+        lines.push('## Lépésről lépésre útiterv');
+        rep.roadmap.forEach(r => {
+          lines.push(`### ${r.stepNumber}. ${r.title} (${r.phase})`);
+          lines.push(r.description);
+          r.actions.forEach(a => lines.push('- ' + a));
+          lines.push('');
+        });
+        lines.push('## Tény vs. Mítosz');
+        rep.factVsMyth.forEach(m => {
+          lines.push(`- **Mítosz (${m.badge})**: ${m.myth}\n  - **Valóság**: ${m.fact}`);
+        });
+        lines.push('\n## Ajánlott videók');
+        rep.videos.forEach(v => {
+          lines.push(`- **[${v.platform.toUpperCase()}] ${v.title}** — ${v.description} ([Megnyitás](${buildVideoUrl(v)}))`);
+        });
+        lines.push('\n## Források');
+        rep.sources.forEach(s => {
+          lines.push(`- **${s.title}** (${s.publication}) — ${s.summary} ([Link](${buildSourceUrl(s)}))`);
+        });
+        return lines.join('\n');
+      }
+
+      // =======================================================================
+      // 10. FŐ MUNKAFOLYAMAT & ESEMÉNYKEZELŐK
+      // =======================================================================
+      async function runLiveResearch(rawTopic) {
+        const topic = String(rawTopic || '').trim();
+        if (!topic) {
+          showToast('Kérlek, írj be egy témát a keresőbe!');
+          dom.topicInput.focus();
+          return;
+        }
+        if (state.isLoading) return;
+
+        state.lastTopic = topic;
+        dom.topicInput.value = topic;
+        syncClearButton();
+        startLoader(topic);
+
+        try {
+          const prompt = buildResearchPrompt(topic, state.outputLang, state.depth);
+          const result = await callGeminiWithFallback(prompt, false);
+          setLoaderState(100, 3);
+
+          const normalized = normalizeReportData(result.data, topic);
+          normalized.isSample = false;
+
+          setTimeout(() => {
+            stopLoader();
+            saveToHistory(normalized);
+            renderReport(normalized);
+            showToast('Mélyelemzés és infografika elkészült!');
+          }, 260);
+        } catch (err) {
+          stopLoader();
+          dom.errorDetailText.textContent = err?.message || 'Hálózati vagy API hiba történt. Kérjük, próbáld újra.';
+          dom.errorSection.classList.remove('hidden');
+          dom.errorSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+
+      function loadSampleReport() {
+        stopLoader();
+        dom.topicInput.value = SAMPLE_REPORT.originalQuery;
+        syncClearButton();
+        renderReport(SAMPLE_REPORT);
+        showToast('Azonnali minta riport („eye area ascending”) betöltve!');
+      }
+
+      function syncClearButton() {
+        dom.clearInputBtn.classList.toggle('hidden', dom.topicInput.value.trim().length === 0);
+      }
+
+      function syncSortButtons() {
+        document.querySelectorAll('.chart-sort-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.sort === state.chartSort);
+        });
+      }
+
+      function syncVideoFilterButtons() {
+        document.querySelectorAll('.video-filter-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.platform === state.videoFilter);
+        });
+      }
+
+      function setupScrollSpy() {
+        const ids = ['sec-overview', 'sec-infographic', 'sec-deepdive', 'sec-roadmap', 'sec-myths', 'sec-videos', 'sec-sources'];
+        const links = document.querySelectorAll('.toc-pill');
+        window.addEventListener('scroll', () => {
+          if (dom.reportContainer.classList.contains('hidden')) return;
+          let activeId = ids[0];
+          const pos = window.scrollY + 175;
+          for (let i = 0; i < ids.length; i++) {
+            const el = document.getElementById(ids[i]);
+            if (el && el.offsetTop <= pos) activeId = ids[i];
+          }
+          links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + activeId));
+        }, { passive: true });
+      }
+
+      // =======================================================================
+      // 11. INICIALIZÁLÁS
+      // =======================================================================
+      document.addEventListener('DOMContentLoaded', () => {
+        loadHistory();
+        setupScrollSpy();
+        dom.customApiKeyInput.value = SafeStore.get(APIKEY_STORE, '') || '';
+
+        // Űrlap beküldés
+        dom.form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          runLiveResearch(dom.topicInput.value);
+        });
+
+        dom.topicInput.addEventListener('input', syncClearButton);
+        dom.clearInputBtn.addEventListener('click', () => {
+          dom.topicInput.value = '';
+          syncClearButton();
+          dom.topicInput.focus();
+        });
+
+        // Nyelv választó
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.outputLang = btn.dataset.lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b === btn));
+          });
+        });
+
+        // Mélység választó
+        document.querySelectorAll('.depth-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.depth = btn.dataset.depth;
+            document.querySelectorAll('.depth-btn').forEach(b => b.classList.toggle('active-cyan', b === btn));
+          });
+        });
+
+        // Azonnali minta gombok
+        document.getElementById('instantDemoBtn').addEventListener('click', loadSampleReport);
+        document.getElementById('headerDemoBtn').addEventListener('click', loadSampleReport);
+        document.getElementById('errorDemoBtn').addEventListener('click', loadSampleReport);
+
+        // Élő keresés chip-ek
+        document.querySelectorAll('.topic-chip').forEach(chip => {
+          chip.addEventListener('click', () => runLiveResearch(chip.dataset.topic));
+        });
+
+        // Hiba újrapróbálás & Beállítások
+        document.getElementById('retryBtn').addEventListener('click', () => {
+          if (state.lastTopic) runLiveResearch(state.lastTopic);
+        });
+        document.getElementById('errorSettingsBtn').addEventListener('click', () => {
+          dom.settingsOverlay.classList.remove('hidden');
+        });
+
+        // Diagram rendezés
+        document.querySelectorAll('.chart-sort-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.chartSort = btn.dataset.sort;
+            syncSortButtons();
+            if (state.currentReport) renderImpactChart(state.currentReport.impactFactors);
+          });
+        });
+
+        // Videó szűrés
+        document.querySelectorAll('.video-filter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.videoFilter = btn.dataset.platform;
+            syncVideoFilterButtons();
+            if (state.currentReport) renderVideos(state.currentReport.videos);
+          });
+        });
+
+        // Összes fejezet nyitása/zárása
+        document.getElementById('toggleAllChaptersBtn').addEventListener('click', () => {
+          state.chaptersOpen = !state.chaptersOpen;
+          document.querySelectorAll('.chapter-card').forEach(card => {
+            card.querySelector('.chapter-body').classList.toggle('hidden', !state.chaptersOpen);
+            card.querySelector('.chapter-chevron').classList.toggle('open', state.chaptersOpen);
+          });
+        });
+
+        // Export & Új keresés
+        document.getElementById('copyMarkdownBtn').addEventListener('click', () => {
+          if (!state.currentReport) return;
+          const ok = copyToClipboardSafe(reportToMarkdown(state.currentReport));
+          showToast(ok ? 'Riport Markdown formátumban a vágólapra másolva!' : 'A másolás nem sikerült.');
+        });
+
+        document.getElementById('printPdfBtn').addEventListener('click', () => {
+          document.querySelectorAll('.chapter-body').forEach(b => b.classList.remove('hidden'));
+          window.print();
+        });
+
+        const focusSearchTop = () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          setTimeout(() => {
+            dom.topicInput.focus();
+            dom.topicInput.select();
+          }, 320);
+        };
+        document.getElementById('newSearchBtn').addEventListener('click', focusSearchTop);
+        document.getElementById('brandResetBtn').addEventListener('click', focusSearchTop);
+
+        // Előzmények drawer
+        document.getElementById('openHistoryBtn').addEventListener('click', () => dom.historyOverlay.classList.remove('hidden'));
+        document.getElementById('closeHistoryBtn').addEventListener('click', () => dom.historyOverlay.classList.add('hidden'));
+        dom.historyOverlay.addEventListener('click', (e) => {
+          if (e.target === dom.historyOverlay) dom.historyOverlay.classList.add('hidden');
+        });
+        document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+          state.history = [];
+          SafeStore.remove(HISTORY_KEY);
+          renderHistoryUI();
+          showToast('Előzmények törölve.');
+        });
+
+        // Beállítások modál
+        document.getElementById('openSettingsBtn').addEventListener('click', () => {
+          dom.apiTestStatus.classList.add('hidden');
+          dom.settingsOverlay.classList.remove('hidden');
+        });
+        document.getElementById('closeSettingsBtn').addEventListener('click', () => dom.settingsOverlay.classList.add('hidden'));
+        dom.settingsOverlay.addEventListener('click', (e) => {
+          if (e.target === dom.settingsOverlay) dom.settingsOverlay.classList.add('hidden');
+        });
+
+        document.getElementById('saveApiKeyBtn').addEventListener('click', () => {
+          const val = dom.customApiKeyInput.value.trim();
+          SafeStore.set(APIKEY_STORE, val);
+          showToast(val ? 'Saját API kulcs elmentve!' : 'Automatikus mód aktiválva.');
+        });
+
+        document.getElementById('clearApiKeyBtn').addEventListener('click', () => {
+          dom.customApiKeyInput.value = '';
+          SafeStore.remove(APIKEY_STORE);
+          showToast('Visszaállítva automatikus módra.');
+        });
+
+        document.getElementById('testApiBtn').addEventListener('click', async () => {
+          dom.apiTestStatus.classList.remove('hidden');
+          dom.apiTestStatus.style.color = '#67e8f9';
+          dom.apiTestStatus.textContent = 'Kapcsolat tesztelése folyamatban...';
+          try {
+            const res = await callGeminiWithFallback('Válaszolj pontosan ennyit: OK', true);
+            dom.apiTestStatus.style.color = '#6ee7b7';
+            dom.apiTestStatus.textContent = '✓ Sikeres kapcsolat! Aktív modell: ' + res.model;
+          } catch (err) {
+            dom.apiTestStatus.style.color = '#fda4af';
+            dom.apiTestStatus.textContent = '✕ Sikertelen teszt: ' + (err?.message || 'Hiba');
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
